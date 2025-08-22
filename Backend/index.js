@@ -3,9 +3,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import router from "./routes/index.js";
 import morgan from "morgan";
-import { env } from "dotenv";
+import dotenv from "dotenv";
 
-env.config();
+dotenv.config();
 const app = express();
 const PORT = 3000 || process.env.PORT;
 
@@ -18,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(morgan("dev"));
 app.use(express.json());
+
 app.set("view engine", "ejs");
 
 app.use("/", router);
