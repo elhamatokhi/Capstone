@@ -3,7 +3,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import router from "./routes/index.js";
 import morgan from "morgan";
+import { env } from "dotenv";
 
+env.config();
 const app = express();
 const PORT = 3000 || process.env.PORT;
 
