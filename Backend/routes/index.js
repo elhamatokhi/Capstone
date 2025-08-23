@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { getAllUsers } from "../controllers/userController.js";
 import {
   registerUser,
   loginUser,
 } from "../controllers/authinticationController.js";
+import { ensureAuthenticated } from "../config/passport.js";
+
 const router = Router();
 
 // middlware
@@ -15,9 +16,8 @@ function requireLogin(req, res, next) {
 }
 
 // Dashboard
-router.get("/dashboard", requireLogin, (req, res) => {
-  console.log("Session username:", req.session.name);
-  res.render("dashboard", { username: req.session.name });
+router.get("/dashboard", ensureAuthenticated, (req, res) => {
+  res.render("dashboard", { user: req.user });
 });
 
 // GET /register — renders registration form
@@ -37,8 +37,9 @@ router.get("/login", (req, res) => {
 router.post("/login", loginUser);
 
 // Logout
-router.get("/logout", (req, res) => {
-  req.session.destroy(() => {
+router.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) return next(err);
     res.redirect("/login");
   });
 });

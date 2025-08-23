@@ -5,7 +5,7 @@ import router from "./routes/index.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import session from "express-session";
-
+import passport from "passport";
 dotenv.config();
 const app = express();
 const PORT = 3000 || process.env.PORT;
@@ -21,11 +21,16 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(
   session({
+    // maintain login state across requests.
     secret: "secret_key",
     resave: false, // resource friendly
     saveUninitialized: true,
   })
 );
+
+// local-passport
+app.use(passport.initialize()); // initializes the passport
+app.use(passport.session()); // Enables use of session - usually JWT is preferred over session
 
 app.set("view engine", "ejs");
 
