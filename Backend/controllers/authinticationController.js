@@ -28,11 +28,15 @@ export const registerUser = async (req, res) => {
       [name, email, hash]
     );
     return res.status(201).json(result.rows[0]);
+    // res.render("dashboard");
+    // res.redirect("/dashboard", { username: user.name });
   } catch (error) {
     console.error("Error registering user:", error);
     return res.status(500).json({ message: "Internal server error." });
   }
 };
+
+// Loign
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -57,17 +61,30 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ message: "Wrong password." });
     }
 
-    // Login successful, return user info
-    return res.json({
-      message: "Logged in successfully.",
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        created_at: user.created_at,
-      },
+    // save user info to session
+    req.session.userId = user.id;
+    req.session.name = user.name;
+
+    // ensure session is saved before redirect
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.redirect("/login");
+      }
+      res.redirect("/dashboard");
     });
+
+    // Login successful, return user info
+    // return res.json({
+    //   message: "Logged in successfully.",
+    //   user: {
+    //     id: user.id,
+    //     name: user.name,
+    //     email: user.email,
+    //     role: user.role,
+    //     created_at: user.created_at,
+    //   },
+    // });
   } catch (error) {
     console.error("Error logging user:", error);
     return res.status(500).json({ message: "Internal server error." });

@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import router from "./routes/index.js";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import session from "express-session";
 
 dotenv.config();
 const app = express();
@@ -18,6 +19,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(
+  session({
+    secret: "secret_key",
+    resave: false, // resource friendly
+    saveUninitialized: true,
+  })
+);
 
 app.set("view engine", "ejs");
 

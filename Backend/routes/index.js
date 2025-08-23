@@ -1,5 +1,4 @@
 import { Router } from "express";
-import pool from "../config/db.js";
 import { getAllUsers } from "../controllers/userController.js";
 import {
   registerUser,
@@ -7,9 +6,18 @@ import {
 } from "../controllers/authinticationController.js";
 const router = Router();
 
-// Get all users
-router.get("/", (req, res) => {
-  res.send("48 hours of Hardwork and a lifetime pleasure!");
+// middlware
+function requireLogin(req, res, next) {
+  if (!req.session?.userId) {
+    return res.redirect("/login");
+  }
+  next();
+}
+
+// Dashboard
+router.get("/dashboard", requireLogin, (req, res) => {
+  console.log("Session username:", req.session.name);
+  res.render("dashboard", { username: req.session.name });
 });
 
 // GET /register — renders registration form
@@ -24,5 +32,15 @@ router.post("/register", registerUser);
 router.get("/login", (req, res) => {
   res.render("auth", { formType: "login" });
 });
+
+// POST login
 router.post("/login", loginUser);
+
+// Logout
+router.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/login");
+  });
+});
+
 export default router;
