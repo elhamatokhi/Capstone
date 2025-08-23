@@ -47,10 +47,13 @@ export const loginUser = (req, res, next) => {
 
     req.logIn(user, (err) => {
       if (err) return res.status(500).json({ message: "Login failed" });
-      return res.json({
-        message: "Login successful",
-        user: { id: user.id, name: user.name },
-      });
+      // return res.json({
+      //   message: "Login successful",
+      //   user: { id: user.id, name: user.name },
+      // });
+      const role = req.user.role;
+      return res.render(`${role}/dashboard`, { user: req.user });
+      // return res.render("dashboard", { user });
     });
   })(req, res, next);
 };

@@ -3,23 +3,10 @@ import {
   registerUser,
   loginUser,
 } from "../controllers/authinticationController.js";
-import { ensureAuthenticated } from "../config/passport.js";
+import { ensureAuthenticated, requireRole } from "../middleware/middleware.js";
 import passport from "passport";
 
 const router = Router();
-
-// middlware
-function requireLogin(req, res, next) {
-  if (!req.session?.userId) {
-    return res.redirect("/login");
-  }
-  next();
-}
-
-// Dashboard
-router.get("/dashboard", ensureAuthenticated, (req, res) => {
-  res.render("dashboard", { user: req.user });
-});
 
 // GET /register — renders registration form
 router.get("/register", (req, res) => {
@@ -66,5 +53,17 @@ router.get(
     res.redirect("/dashboard"); // this must run
   }
 );
+
+/**----------------------ROLES---------------------- */
+
+// Dashboard route
+router.get("/dashboard", ensureAuthenticated, (req, res) => {
+  const role = req.user.role;
+  res.render(`${role}/dashboard`, { user: req.user });
+});
+
+router.get("/admin", ensureAuthenticated, requireRole("admin"), (req, res) => {
+  res.render("dashboard", { user: req.user });
+});
 
 export default router;

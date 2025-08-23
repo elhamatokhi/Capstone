@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Citizen Dashboard</title>
+  </head>
+  <body>
+    <h1>Welcome, <%= user.name %>!</h1>
+    <p>Role: <%= user.role %></p>
+
+    <h2>Request Services</h2>
+    <form action="/request-service" method="POST">
+      <input
+        type="text"
+        name="service"
+        placeholder="Enter service request"
+        required
+      />
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>

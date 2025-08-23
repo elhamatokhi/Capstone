@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Panel</title>
+  </head>
+  <body>
+    <h1>Welcome, Admin <%= user.name %>!</h1>
+    <p>Role: <%= user.role %></p>
+
+    <h2>System Management</h2>
+    <ul>
+      <li><a href="/admin/users">Manage Users</a></li>
+      <li><a href="/admin/reports">View Reports</a></li>
+      <li><a href="/admin/settings">System Settings</a></li>
+    </ul>
+  </body>
+</html>

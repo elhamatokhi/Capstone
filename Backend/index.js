@@ -6,6 +6,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import session from "express-session";
 import passport from "passport";
+import "./config/passport.js";
 dotenv.config();
 const app = express();
 const PORT = 3000 || process.env.PORT;

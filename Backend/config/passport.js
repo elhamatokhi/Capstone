@@ -4,7 +4,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcrypt";
 import pool from "./db.js";
 
-// Passort strategy
+// Passort local strategy
 passport.use(
   new LocalStrategy(
     { usernameField: "email" }, // use email instead of username
@@ -82,11 +82,3 @@ passport.deserializeUser(async (id, done) => {
     done(error);
   }
 });
-
-//  Middleware for protecting routes
-export const ensureAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated && req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/login");
-};
