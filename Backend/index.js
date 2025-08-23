@@ -21,7 +21,6 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(
   session({
-    // maintain login state across requests.
     secret: "secret_key",
     resave: false, // resource friendly
     saveUninitialized: true,

@@ -4,6 +4,7 @@ import {
   loginUser,
 } from "../controllers/authinticationController.js";
 import { ensureAuthenticated } from "../config/passport.js";
+import passport from "passport";
 
 const router = Router();
 
@@ -38,10 +39,32 @@ router.post("/login", loginUser);
 
 // Logout
 router.get("/logout", (req, res, next) => {
-  req.logout((err) => {
+  req.logout({ keepSessionInfo: false }, (err) => {
     if (err) return next(err);
-    res.redirect("/login");
+    req.session.destroy((err) => {
+      if (err) return next(err);
+      res.clearCookie("connect.sid"); // clear session cookie
+      res.redirect("/login"); // go to login page
+    });
   });
 });
+
+router.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account",
+  })
+);
+
+// Google OAuth2 Callback
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  (req, res) => {
+    console.log("Google login successful, user:", req.user);
+    res.redirect("/dashboard"); // this must run
+  }
+);
 
 export default router;
