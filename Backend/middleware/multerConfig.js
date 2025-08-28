@@ -8,8 +8,9 @@ const __dirname = path.dirname(__filename);
 
 // Storage configuration
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "../public/uploads"));
+  destination: function (req, file, cb) {
+    // path for uploads directory
+    cb(null, path.join(__dirname, "/../uploads"));
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -26,7 +27,7 @@ const fileFilter = (req, file, cb) => {
 
   if (
     allowedTypes.test(ext) &&
-    (mime === "application/pdf" || mime.startsWith("image/"))
+    (mime === "application/pdf" || mime === "image/jpeg")
   ) {
     cb(null, true);
   } else {
@@ -34,4 +35,4 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-export const upload = multer({ storage, fileFilter });
+export const upload = multer({ storage: storage, fileFilter: fileFilter });

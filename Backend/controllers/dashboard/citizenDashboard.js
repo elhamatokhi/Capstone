@@ -42,16 +42,16 @@ export const submitRequest = async (req, res) => {
     const userId = req.user.id;
     const { note } = req.body;
 
-    // 1️⃣ Save request in DB
+    // Save request in DB
     const result = await pool.query(
       `INSERT INTO requests (user_id, service_id,comments) VALUES ($1, $2,$3) RETURNING id`,
       [userId, serviceId, note]
     );
 
-    const requestId = result.rows[0].id; // ✅ fix: get request ID
+    const requestId = result.rows[0].id; //  get request ID
     console.log("Request ID:", requestId);
 
-    // 2️⃣ Handle dynamic fields
+    // Handle dynamic fields
     const ignoreKeys = [
       "serviceId",
       "comments",
@@ -61,6 +61,7 @@ export const submitRequest = async (req, res) => {
       "email",
       "note",
     ];
+
     const dynamicFields = Object.entries(req.body).filter(
       ([key]) => !ignoreKeys.includes(key)
     );
@@ -75,10 +76,34 @@ export const submitRequest = async (req, res) => {
 
       const fieldId = fieldResult.rows[0].id;
 
+      // Insert into request fields
       await pool.query(
         "INSERT INTO request_fields (request_id, field_id, value) VALUES ($1, $2, $3)",
         [requestId, fieldId, value]
       );
+    }
+
+    // Handle uploaded files
+    if (req.files && req.files.length > 0) {
+      console.log("Uploaded files:", req.files);
+
+      for (const file of req.files) {
+        // Map MIME to enum value
+        let fileType;
+        if (file.mimetype === "application/pdf") {
+          fileType = "pdf";
+        } else if (file.mimetype === "image/jpeg") {
+          fileType = "jpg";
+        } else {
+          throw new Error(`Unsupported file type: ${file.mimetype}`);
+        }
+
+        await pool.query(
+          `INSERT INTO documents (request_id, file_path, file_type, uploaded_at)
+           VALUES ($1, $2, $3, NOW())`,
+          [requestId, file.path, fileType]
+        );
+      }
     }
 
     res.redirect("/citizen/dashboard");

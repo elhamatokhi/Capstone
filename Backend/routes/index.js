@@ -10,7 +10,7 @@ import {
   submitRequest,
 } from "../controllers/dashboard/citizenDashboard.js";
 import passport from "passport";
-import { upload } from "../middleware/upload.js";
+import { upload } from "../middleware/multerConfig.js";
 const router = Router();
 
 // GET /register — renders registration form
@@ -75,12 +75,12 @@ router.get("/citizen/dashboard", ensureAuthenticated, services, (req, res) => {
 });
 
 // Citizen request
-router.get("/citizen/request/:serviceId", requestService);
+router.get("/citizen/request/:serviceId", ensureAuthenticated, requestService);
 
 // POST citizen request
 router.post(
   "/citizen/request/:serviceId",
-  upload.array("documents"),
+  upload.array("documents", 10),
   ensureAuthenticated,
   submitRequest
 );
