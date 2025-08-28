@@ -1,0 +1,49 @@
+<%- include('partials/header', { title: "My Requests" }) %> <%-
+include('partials/navbar') %>
+
+<div class="max-w-5xl mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-4">My Requests</h2>
+
+  <table class="w-full border-collapse bg-white shadow rounded-lg">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="p-3 text-left">Service</th>
+        <th class="p-3 text-left">Status</th>
+        <th class="p-3 text-left">Submitted On</th>
+        <th class="p-3 text-left">Payment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% requests.forEach(req => { %>
+      <tr class="border-b">
+        <td class="p-3"><%= req.service_name %></td>
+        <td class="p-3">
+          <% if(req.status === "approved") { %>
+          <span class="text-green-600 font-bold"><%= req.status %></span>
+          <% } else if(req.status === "rejected") { %>
+          <span class="text-red-600 font-bold"><%= req.status %></span>
+          <% } else { %>
+          <span class="text-yellow-600 font-semibold"><%= req.status %></span>
+          <% } %>
+        </td>
+        <td class="p-3"><%= req.created_at.toDateString() %></td>
+        <td class="p-3">
+          <% if(req.fee > 0 && !req.payment_status) { %>
+          <a
+            href="/citizen/payment/<%= req.id %>"
+            class="text-blue-600 underline"
+            >Pay Now</a
+          >
+          <% } else if(req.payment_status === "paid") { %>
+          <span class="text-green-600">Paid</span>
+          <% } else { %>
+          <span>-</span>
+          <% } %>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('partials/footer') %>

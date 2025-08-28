@@ -1,18 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Admin Panel</title>
-  </head>
-  <body>
-    <h1>Welcome, Admin <%= user.name %>!</h1>
-    <p>Role: <%= user.role %></p>
+<%- include('../partials/header', { title: "Admin Dashboard" }) %> <%-
+include('../partials/navbar-admin') %>
 
-    <h2>System Management</h2>
-    <ul>
-      <li><a href="/admin/users">Manage Users</a></li>
-      <li><a href="/admin/reports">View Reports</a></li>
-      <li><a href="/admin/settings">System Settings</a></li>
-    </ul>
-  </body>
-</html>
+<div class="max-w-6xl mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-4">Welcome, <%= user.name %></h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="p-4 bg-white shadow rounded-lg">
+      <h3 class="font-semibold">Services</h3>
+      <p class="text-gray-500">Manage all available services here.</p>
+    </div>
+    <div class="p-4 bg-white shadow rounded-lg">
+      <h3 class="font-semibold">Requests</h3>
+      <p class="text-gray-500">Review and track citizen requests.</p>
+    </div>
+    <div class="p-4 bg-white shadow rounded-lg">
+      <h3 class="font-semibold">Users</h3>
+      <p class="text-gray-500">View and manage registered users.</p>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

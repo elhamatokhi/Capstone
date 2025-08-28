@@ -1,0 +1,23 @@
+<%- include('partials/header', { title: "Payment" }) %> <%-
+include('partials/navbar') %>
+
+<div class="max-w-xl mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-4">Payment for <%= service.name %></h2>
+
+  <div class="bg-white p-6 rounded-lg shadow space-y-4">
+    <p>Service: <span class="font-semibold"><%= service.name %></span></p>
+    <p>Fee: <span class="text-red-600 font-bold">$<%= service.fee %></span></p>
+    <p>Status: <%= paymentStatus || "Pending" %></p>
+
+    <form action="/citizen/payment/<%= requestId %>" method="POST">
+      <button
+        type="submit"
+        class="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700"
+      >
+        Pay Now
+      </button>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

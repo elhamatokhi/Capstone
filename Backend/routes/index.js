@@ -4,8 +4,13 @@ import {
   loginUser,
 } from "../controllers/authinticationController.js";
 import { ensureAuthenticated, requireRole } from "../middleware/middleware.js";
+import {
+  services,
+  requestService,
+  submitRequest,
+} from "../controllers/dashboard/citizenDashboard.js";
 import passport from "passport";
-
+import { upload } from "../middleware/upload.js";
 const router = Router();
 
 // GET /register — renders registration form
@@ -36,6 +41,7 @@ router.get("/logout", (req, res, next) => {
   });
 });
 
+// Google auth routes
 router.get(
   "/auth/google",
   passport.authenticate("google", {
@@ -55,15 +61,31 @@ router.get(
 );
 
 /**----------------------ROLES---------------------- */
-
 // Dashboard route
 router.get("/dashboard", ensureAuthenticated, (req, res) => {
   const role = req.user.role;
   res.render(`${role}/dashboard`, { user: req.user });
 });
+/**--------------------------Citizen routes------------------------ */ //
 
-router.get("/admin", ensureAuthenticated, requireRole("admin"), (req, res) => {
-  res.render("dashboard", { user: req.user });
+// Citizen Dashboard
+router.get("/citizen/dashboard", ensureAuthenticated, services, (req, res) => {
+  const role = req.user.role;
+  res.render(`${role}/dashboard`, { user: req.user });
 });
+
+// Citizen request
+router.get("/citizen/request/:serviceId", requestService);
+
+// POST citizen request
+router.post(
+  "/citizen/request/:serviceId",
+  upload.array("documents"),
+  ensureAuthenticated,
+  submitRequest
+);
+// GET /citizen/profile View/edit profile
+
+router.get("/citizen/profile", (req, res) => {}); // GET /citizen/services List  available services to apply for
 
 export default router;

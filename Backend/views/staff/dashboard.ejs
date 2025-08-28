@@ -1,14 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Employee Dashboard</title>
-  </head>
-  <body>
-    <h1>Welcome, Officer <%= user.name %>!</h1>
-    <p>Role: <%= user.role %></p>
+<%- include('../partials/header', { title: "Staff Dashboard" }) %> <%-
+include('../partials/navbar-staff') %>
 
-    <h2>Review Requests</h2>
-    <ul></ul>
-  </body>
-</html>
+<div class="max-w-6xl mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-4">Staff Dashboard</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="p-4 bg-white shadow rounded-lg">
+      <h3 class="font-semibold">Pending Requests</h3>
+      <p class="text-2xl text-green-600"></p>
+    </div>
+    <div class="p-4 bg-white shadow rounded-lg">
+      <h3 class="font-semibold">Requests Under Review</h3>
+      <p class="text-2xl text-green-600"></p>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

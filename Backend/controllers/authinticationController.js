@@ -52,7 +52,7 @@ export const loginUser = (req, res, next) => {
       //   user: { id: user.id, name: user.name },
       // });
       const role = req.user.role;
-      return res.render(`${role}/dashboard`, { user: req.user });
+      return res.redirect(`${role}/dashboard`);
       // return res.render("dashboard", { user });
     });
   })(req, res, next);
