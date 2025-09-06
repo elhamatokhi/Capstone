@@ -6,6 +6,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import session from "express-session";
 import passport from "passport";
+import flash from "connect-flash";
 import "./config/passport.js";
 dotenv.config();
 const app = express();
@@ -27,6 +28,16 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+// Flash setup
+app.use(flash());
+
+// Make flash messages available in all views
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
+  next();
+});
 
 // local-passport
 app.use(passport.initialize()); // initializes the passport

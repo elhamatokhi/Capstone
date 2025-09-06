@@ -7,7 +7,8 @@ const saltRound = 10;
 // Register Logic
 
 export const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, gender, date_of_birth, national_id } =
+    req.body;
   try {
     // Check if the user already exists
     const checkQuery = await pool.query(
@@ -24,10 +25,12 @@ export const registerUser = async (req, res) => {
     const hash = await bcrypt.hash(password, saltRound);
 
     const result = await pool.query(
-      `INSERT INTO users (name, email, password) VALUES ($1,$2,$3)
-        RETURNING  name, email, created_at, updated_at`,
-      [name, email, hash]
+      `INSERT INTO users (name, email, password, gender, date_of_birth, national_id) 
+       VALUES ($1,$2,$3,$4,$5,$6)
+       RETURNING id, name, email, gender, date_of_birth, national_id, created_at, updated_at`,
+      [name, email, hash, gender, date_of_birth, national_id]
     );
+
     return res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error("Error registering user:", error);

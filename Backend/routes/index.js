@@ -8,7 +8,15 @@ import {
   services,
   requestService,
   submitRequest,
+  getProfile,
+  updateProfile,
+  editProfile,
+  getHistory,
+  deleteRequest,
+  paymentSuccess,
+  postPayment,
 } from "../controllers/dashboard/citizenDashboard.js";
+import { postContact, getContact } from "../controllers/navBarControllers.js";
 import passport from "passport";
 import { upload } from "../middleware/multerConfig.js";
 const router = Router();
@@ -84,8 +92,39 @@ router.post(
   ensureAuthenticated,
   submitRequest
 );
-// GET /citizen/profile View/edit profile
 
-router.get("/citizen/profile", (req, res) => {}); // GET /citizen/services List  available services to apply for
+// DELETE citizen request
+router.post("/citizen/delete/:requestId", ensureAuthenticated, deleteRequest);
 
+// GET /citizen/profile
+router.get("/citizen/profile", ensureAuthenticated, getProfile);
+
+// edit profile
+router.get("/citizen/profile/edit", ensureAuthenticated, editProfile);
+
+// UPDATE profile
+router.post("/citizen/profile/edit", ensureAuthenticated, updateProfile);
+
+// History page
+router.get("/citizen/history", ensureAuthenticated, getHistory);
+
+// About page
+router.get(`/about`, ensureAuthenticated, (req, res) => {
+  res.render(`about`);
+});
+
+// Contact page
+router.get(`/contact`, ensureAuthenticated, getContact);
+
+// Contact form submission
+router.post(`/contact`, ensureAuthenticated, postContact);
+
+// FAKE PAYMENT SUCCESS PAGE
+// GET fake payment success page
+router.get("/citizen/payment-success", paymentSuccess);
+
+// In your fake payment route
+router.post("/citizen/pay/:id", postPayment);
+
+/* ----------------------------- STAFF ROUTES -------------------------- */
 export default router;

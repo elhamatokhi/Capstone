@@ -16,9 +16,9 @@ export const services = async (req, res) => {
 // Get a request
 export const requestService = async (req, res) => {
   try {
-    const serviceId = req.params.serviceId;
+    const serviceId = parseInt(req.params.serviceId, 10);
 
-    if (!serviceId) {
+    if (isNaN(serviceId)) {
       return res.redirect("/citizen/dashboard");
     }
 
@@ -85,8 +85,6 @@ export const submitRequest = async (req, res) => {
 
     // Handle uploaded files
     if (req.files && req.files.length > 0) {
-      console.log("Uploaded files:", req.files);
-
       for (const file of req.files) {
         // Map MIME to enum value
         let fileType;
@@ -106,9 +104,188 @@ export const submitRequest = async (req, res) => {
       }
     }
 
+    req.flash("success_msg", "Your request was submitted successfully!");
     res.redirect("/citizen/dashboard");
   } catch (err) {
     console.error("Error submitting request:", err);
     res.status(500).send("Something went wrong");
   }
+};
+
+// Delete a request
+export const deleteRequest = async (req, res) => {
+  const requestId = req.params.requestId;
+  const userId = req.user.id;
+  try {
+    // Check if the request exists and belongs to the user
+    const result = await pool.query(
+      "SELECT * FROM requests WHERE id = $1 AND user_id = $2",
+      [requestId, userId]
+    );
+    if (result.rowCount === 0) {
+      req.flash(
+        "error_msg",
+        "Request not found or you do not have permission to delete it."
+      );
+      return res.status(404).redirect("/citizen/history");
+    }
+
+    // Delete the request
+    await pool.query("DELETE FROM requests WHERE id = $1", [requestId]);
+    req.flash("success_msg", "Request canceled successfully.");
+    res.redirect("/citizen/history");
+  } catch (error) {
+    console.error("Error deleting request:", error);
+    req.flash("error_msg", "Failed to delete request.");
+    res.status(500).redirect("/citizen/history");
+  }
+};
+
+// Setup profile
+export const getProfile = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const userResult = await pool.query("SELECT * FROM users WHERE id = $1", [
+      userId,
+    ]);
+
+    const user = userResult.rows[0];
+
+    // Convert to YYYY-MM-DD
+    user.date_of_birth = user.date_of_birth.toISOString().split("T")[0];
+
+    res.render("citizen/profile", { user });
+  } catch (error) {
+    console.log("Error", error);
+  }
+};
+
+// Get edit
+export const editProfile = (req, res) => {
+  const user = req.user;
+  res.render("edit", { user });
+};
+
+export const updateProfile = async (req, res) => {
+  const { name, email, national_id, date_of_birth } = req.body;
+  const userId = req.user.id;
+  const role = req.user.role;
+
+  const query = `Update users
+    SET name = $1, email = $2, national_id = $3, date_of_birth = $4
+    WHERE id = $5
+    RETURNING *`;
+
+  const values = [name, email, national_id, date_of_birth, userId];
+
+  const result = await pool.query(query, values);
+
+  if (result.rowCount === 0) {
+    return res
+      .status(404)
+      .json({ success: false, message: "Profile not found." });
+  }
+  req.flash("success_msg", "Profile updated successfully!");
+  res.redirect(`/${role}/profile`);
+  try {
+  } catch (error) {
+    console.log("Error", error);
+  }
+};
+
+// Update profile
+export const postProfile = async (req, res) => {
+  const user = req.user;
+};
+
+/* -------------- Citizen History page --------------- */
+
+export const getHistory = async (req, res) => {
+  const userId = req.user.id;
+  try {
+    const historyResult = await pool.query(
+      `SELECT r.id, s.name AS service_name, s.fee AS service_fee, r.status, r.comments, r.created_at
+       FROM requests r
+       JOIN services s ON r.service_id = s.id
+       WHERE r.user_id = $1
+       ORDER BY r.created_at DESC`,
+      [userId]
+    );
+    const requests = historyResult.rows;
+    res.render("citizen/history", { requests });
+  } catch (error) {
+    console.log("Error fetching history:", error);
+    res.status(500).send("Internal server error.");
+  }
+};
+
+export const postPayment = async (req, res) => {
+  try {
+    const requestId = req.params.id;
+    const userId = req.user.id;
+
+    // Check if request exists and belongs to user
+    const requestResult = await pool.query(
+      `SELECT r.id, s.name, s.fee
+       FROM requests r
+       JOIN services s ON r.service_id = s.id
+       WHERE r.id = $1 AND r.user_id = $2`,
+      [requestId, userId]
+    );
+    if (requestResult.rows.length === 0) {
+      req.flash(
+        "error_msg",
+        "Request not found or you do not have permission."
+      );
+      return res.redirect("/citizen/history");
+    }
+
+    // Check if payment already exists
+    const paymentResult = await pool.query(
+      "SELECT * FROM payments WHERE request_id = $1 AND status = 'paid'",
+      [requestId]
+    );
+
+    if (paymentResult.rows.length > 0) {
+      req.flash("error_msg", "This request is already paid.");
+      return res.redirect("/citizen/history");
+    }
+
+    // Insert payment record
+    await pool.query(
+      `INSERT INTO payments (request_id, status, amount, paid_at)
+       VALUES ($1, $2,$3, NOW())`,
+      [requestId, "paid", requestResult.rows[0].fee]
+    );
+
+    // Fetch payment info for success page
+    const newPaymentResult = await pool.query(
+      "SELECT * FROM payments WHERE request_id = $1 AND id = $2 AND status = 'paid' ORDER BY paid_at DESC LIMIT 1",
+      [requestId, userId]
+    );
+    req.session.paymentSuccess = newPaymentResult.rows[0];
+
+    res.redirect("/citizen/payment-success");
+  } catch (err) {
+    console.error("Error processing payment:", err);
+    req.flash("error_msg", "Something went wrong");
+    res.redirect("/citizen/history");
+  }
+};
+
+export const paymentSuccess = (req, res) => {
+  const paymentInfo = req.session.paymentSuccess;
+  // Clear the session data after reading
+  req.session.paymentSuccess = null;
+
+  if (!paymentInfo) {
+    req.flash("error_msg", "No payment information found.");
+    return res.redirect("/citizen/history");
+  }
+
+  res.render("citizen/payment-success", {
+    payment: paymentInfo,
+    success_msg: ["Payment completed successfully!"],
+  });
 };
