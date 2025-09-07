@@ -1,6 +1,6 @@
 import passport from "passport";
 import pool from "../config/db.js";
-import bcrypt, { hash } from "bcrypt";
+import bcrypt from "bcrypt";
 
 const saltRound = 10;
 
@@ -55,8 +55,7 @@ export const loginUser = (req, res, next) => {
       //   user: { id: user.id, name: user.name },
       // });
       const role = req.user.role;
-      return res.redirect(`${role}/dashboard`);
-      // return res.render("dashboard", { user });
+      return res.redirect(`/${role}/dashboard`);
     });
   })(req, res, next);
 };
