@@ -55,6 +55,7 @@ export const loginUser = (req, res, next) => {
       //   user: { id: user.id, name: user.name },
       // });
       const role = req.user.role;
+      console.log("Login successful, user:", req.user);
       return res.redirect(`/${role}/dashboard`);
     });
   })(req, res, next);

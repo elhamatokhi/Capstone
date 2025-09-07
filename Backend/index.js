@@ -10,6 +10,7 @@ import flash from "connect-flash";
 import citizenRouter from "./routes/citizenRouter.js";
 import adminRouter from "./routes/adminRouter.js";
 import staffRouter from "./routes/staffRouter.js";
+import departmentHead from "./routes/department_headRouter.js";
 import "./config/passport.js";
 
 dotenv.config();
@@ -48,6 +49,7 @@ app.use(passport.initialize()); // initializes the passport
 app.use(passport.session()); // Enables use of session - usually JWT is preferred over session
 
 app.set("view engine", "ejs");
+app.use("/department_head", departmentHead);
 app.use("/citizen", citizenRouter);
 app.use("/admin", adminRouter);
 app.use("/staff", staffRouter);

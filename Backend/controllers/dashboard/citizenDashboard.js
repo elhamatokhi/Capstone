@@ -1,10 +1,16 @@
 import pool from "../../config/db.js";
 
 // Get citizen dashboard
+// export const getDashboard = (req, res) => {
+//   const role = req.user.role;
+//   console.log(req.user);
+//   res.render(`${role}/dashboard`, { user: req.user });
+// };
+
 export const getDashboard = (req, res) => {
   const role = req.user.role;
-  console.log(req.user);
-  res.render(`${role}/dashboard`, { user: req.user });
+  const requests = res.locals.requests || []; // get requests from middleware
+  res.render(`${role}/dashboard`, { user: req.user, requests });
 };
 
 // Services a citizen can request
