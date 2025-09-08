@@ -12,6 +12,5 @@ staffRouter.use(requireRoles("staff"));
 staffRouter.get("/dashboard", requests, getDashboard);
 
 // Citizen requests
-// staffRouter.get("/requests", requests);
 
 export default staffRouter;

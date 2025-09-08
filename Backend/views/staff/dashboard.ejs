@@ -7,9 +7,9 @@ include('../partials/navbar-staff') %>
   <!-- Summary Cards -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
     <div class="p-4 bg-white shadow rounded-lg">
-      <h3 class="font-semibold">Pending Requests</h3>
+      <h3 class="font-semibold">Submitted Requests</h3>
       <p class="text-2xl text-yellow-600">
-        <%= requests.filter(r => r.status === 'pending').length %>
+        <%= requests.filter(r => r.status === 'submitted').length %>
       </p>
     </div>
     <div class="p-4 bg-white shadow rounded-lg">
@@ -24,6 +24,12 @@ include('../partials/navbar-staff') %>
         <%= requests.filter(r => r.status === 'approved').length %>
       </p>
     </div>
+    <div class="p-4 bg-white shadow rounded-lg">
+      <h3 class="font-semibold">Rejected Requests</h3>
+      <p class="text-2xl text-green-600">
+        <%= requests.filter(r => r.status === 'rejected').length %>
+      </p>
+    </div>
   </div>
 
   <!-- Requests Table -->
@@ -34,7 +40,7 @@ include('../partials/navbar-staff') %>
         <tr>
           <th class="px-2 py-1">Request ID</th>
           <th class="px-2 py-1">Citizen Name</th>
-          <th class="px-2 py-1">Service ID</th>
+          <th class="px-2 py-1">Service Name</th>
           <th class="px-2 py-1">Status</th>
           <th class="px-2 py-1">Actions</th>
         </tr>
@@ -44,10 +50,10 @@ include('../partials/navbar-staff') %>
         <tr>
           <td class="px-2 py-1"><%= request.id %></td>
           <td class="px-2 py-1"><%= request.citizen_name %></td>
-          <td class="px-2 py-1"><%= request.service_id %></td>
+          <td class="px-2 py-1"><%= request.service_name %></td>
           <td class="px-2 py-1"><%= request.status %></td>
           <td class="px-2 py-1">
-            <% if(request.status === 'pending') { %>
+            <% if(request.status === 'submitted') { %>
             <form
               action="/staff/approve/<%= request.id %>"
               method="POST"
