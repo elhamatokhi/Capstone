@@ -1,0 +1,96 @@
+<%- include('../partials/header', { title: "Request Details" }) %> <%-
+include('../partials/navbar-staff') %>
+
+<div class="max-w-5xl mx-auto p-6 space-y-6">
+  <!-- Header -->
+  <header class="flex justify-between items-center">
+    <h1 class="text-3xl font-bold">Request #<%= request.id %></h1>
+    <span
+      class="px-3 py-1 rounded text-white <%= request.status === 'pending' ? 'bg-yellow-600' : request.status === 'approved' ? 'bg-green-600' : 'bg-red-600' %>"
+    >
+      <%= request.status.toUpperCase() %>
+    </span>
+  </header>
+
+  <!-- Request Details -->
+  <section class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-2xl font-semibold mb-4">Request Information</h2>
+    <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <dt class="font-medium">Service</dt>
+        <dd><%= request.service_name %></dd>
+      </div>
+      <div>
+        <dt class="font-medium">Comments</dt>
+        <dd><%= request.comments || 'No comments provided' %></dd>
+      </div>
+      <div>
+        <dt class="font-medium">Created At</dt>
+        <dd><%= request.created_at.toLocaleString() %></dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- Citizen Information -->
+  <section class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-2xl font-semibold mb-4">Citizen Information</h2>
+    <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <dt class="font-medium">Name</dt>
+        <dd><%= request.citizen_name %></dd>
+      </div>
+      <div>
+        <dt class="font-medium">Email</dt>
+        <dd><%= request.citizen_email %></dd>
+      </div>
+      <div>
+        <dt class="font-medium">National ID</dt>
+        <dd><%= request.national_id || 'Not provided' %></dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- Submitted Documents -->
+  <section class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-2xl font-semibold mb-4">Submitted Documents</h2>
+    <% if (documents && documents.length > 0) { %>
+    <ul class="list-disc ml-6 space-y-1">
+      <% documents.forEach(doc => { %>
+      <li>
+        <a
+          href="/uploads/<%= doc.file_path %>"
+          target="_blank"
+          class="text-blue-600 hover:underline"
+        >
+          <%= doc.file_type %>
+        </a>
+      </li>
+      <% }) %>
+    </ul>
+    <% } else { %>
+    <p class="text-gray-500">No documents submitted.</p>
+    <% } %>
+  </section>
+
+  <!-- Actions -->
+  <section class="flex flex-wrap gap-4">
+    <form action="/staff/requests/<%= request.id %>/approve" method="POST">
+      <button
+        type="submit"
+        class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+      >
+        Approve
+      </button>
+    </form>
+    <form action="/staff/requests/<%= request.id %>/reject" method="POST">
+      <button
+        type="submit"
+        class="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+      >
+        Reject
+      </button>
+    </form>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>
