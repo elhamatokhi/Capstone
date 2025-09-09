@@ -13,6 +13,7 @@ include('../partials/navbar-staff') %>
         <th class="py-3 px-4 text-left">Status</th>
         <th class="py-3 px-4 text-left">Comments</th>
         <th class="py-3 px-4 text-left">Created At</th>
+        <th class="py-3 px-4 text-left">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -29,6 +30,13 @@ include('../partials/navbar-staff') %>
         </td>
         <td class="py-3 px-4"><%= r.comments || '—' %></td>
         <td class="py-3 px-4"><%= r.created_at %></td>
+        <td class="py-3 px-4">
+          <a
+            href="/staff/requests/<%= r.id %>"
+            class="text-blue-600 hover:underline"
+            >View</a
+          >
+        </td>
       </tr>
       <% }) %>
     </tbody>

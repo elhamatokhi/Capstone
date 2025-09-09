@@ -1,6 +1,6 @@
 import pool from "../../config/db.js";
 
-// `fetch requests assigned to a specific staff member
+// fetch requests assigned to a specific staff member
 export const fetchStaffRequests = async (staffId) => {
   const result = await pool.query(
     `SELECT 
@@ -89,3 +89,50 @@ export const getRequestDetails = async (req, res) => {
     res.redirect("/staff/requests");
   }
 };
+
+/*-----------------------------------Update request status--------------------------- */
+// Update in DB
+export const updateStatus = async (status, requestId) => {
+  try {
+    const result = await pool.query(
+      `UPDATE requests
+     SET status = $1, updated_at = NOW()
+     WHERE id = $2
+     RETURNING *`,
+      [status, requestId]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error updating request status:", error);
+    throw error;
+  }
+};
+// Approve request
+export const approveRequest = async (req, res) => {
+  const requestId = req.params.id;
+
+  try {
+    await updateStatus("approved", requestId);
+    req.flash("success_msg", "Request approved successfully.");
+    res.redirect(`/staff/requests/${requestId}`);
+  } catch (error) {
+    console.error("Error approving request:", error);
+    req.flash("error_msg", "Failed to approve request.");
+    res.redirect(`/staff/requests/${requestId}`);
+  }
+};
+
+// Reject request
+export const rejectRequest = async (req, res) => {
+  const requestId = req.params.id;
+  try {
+    await updateStatus("rejected", requestId);
+    req.flash("success_msg", "Request rejected successfully.");
+    res.redirect(`/staff/requests/${requestId}`);
+  } catch (error) {
+    console.error("Error rejecting request:", error);
+    req.flash("error_msg", "Failed to reject request.");
+    res.redirect(`/staff/requests/${requestId}`);
+  }
+};
+// Add comments to request

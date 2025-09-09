@@ -62,7 +62,6 @@ export const submitRequest = async (req, res) => {
     );
 
     const requestId = result.rows[0].id; //  get request ID
-    console.log("Request ID:", requestId);
 
     // Handle dynamic fields
     const ignoreKeys = [

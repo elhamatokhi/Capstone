@@ -5,6 +5,8 @@ import {
   staffDashboard,
   getRequestDetails,
   getStaffRequest,
+  approveRequest,
+  rejectRequest,
 } from "../controllers/dashboard/staffDashboardController.js";
 
 const staffRouter = Router();
@@ -22,4 +24,10 @@ staffRouter.get("/requests", getStaffRequest);
 
 // Request details
 staffRouter.get("/requests/:id", getRequestDetails);
+
+// Approve a request
+staffRouter.post("/requests/:id/approve", approveRequest);
+
+// Reject a request
+staffRouter.post("/requests/:id/reject", rejectRequest);
 export default staffRouter;

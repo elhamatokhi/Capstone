@@ -1,5 +1,28 @@
 <%- include('../partials/header', { title: "Request Details" }) %> <%-
-include('../partials/navbar-staff') %>
+include('../partials/navbar-staff') %> <% if (success_msg && success_msg.length
+> 0) { %>
+<div
+  id="flash-success"
+  class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md mb-4"
+>
+  <%= success_msg[0] %>
+</div>
+<% } %> <% if (error_msg && error_msg.length > 0) { %>
+<div
+  id="flash-error"
+  class="bg-red-100 text-red-800 px-4 py-2 rounded-lg shadow-md mb-4"
+>
+  <%= error_msg[0] %>
+</div>
+<% } %>
+<script>
+  setTimeout(function () {
+    const flash = document.getElementById("flash-success");
+    const failFlash = document.getElementById("flash-error");
+    if (failFlash) failFlash.style.display = "none";
+    if (flash) flash.style.display = "none";
+  }, 2000);
+</script>
 
 <div class="max-w-5xl mx-auto p-6 space-y-6">
   <!-- Header -->
