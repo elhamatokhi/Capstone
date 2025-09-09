@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { ensureAuthenticated, requireRoles } from "../middleware/middleware.js";
 import { getDashboard } from "../controllers/dashboard/citizenDashboard.js";
-import { fetchRequests } from "../controllers/dashboard/staffDashboardController.js";
 import { adminDashboard } from "../controllers/dashboard/adminDashboard.js";
+import { fetchRequests } from "../controllers/dashboard/adminDashboard.js";
 const adminRouter = Router();
 
 adminRouter.use(requireRoles("admin"));
