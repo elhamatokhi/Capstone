@@ -1,29 +1,58 @@
 import pool from "../../config/db.js";
 
-const fetchRequests = async (departmentId) => {
+export const fetchStaffRequests = async (staffId) => {
   const result = await pool.query(
-    `SELECT r.id, r.status, r.comments, r.created_at,
-            s.name AS service_name, u.name AS citizen_name
+    `SELECT 
+       r.id, 
+       r.status, 
+       r.comments,  
+       s.name AS service_name, 
+       TO_CHAR(r.created_at, 'YYYY-MM-DD HH12:MI AM') AS created_at
      FROM requests r
      JOIN services s ON r.service_id = s.id
-     JOIN users u ON r.user_id = u.id
-     WHERE s.department_id = $1
+     JOIN request_assignments ra ON r.id = ra.request_id
+     WHERE ra.staff_id = $1
      ORDER BY r.created_at DESC`,
-    [departmentId]
+    [staffId]
   );
   return result.rows;
 };
 
 // Dashboard
 export const staffDashboard = async (req, res) => {
-  const requests = await fetchRequests(req.user.department_id);
-  res.render("staff/dashboard", { requests });
+  try {
+    const requests = await fetchStaffRequests(req.user.id);
+    res.render("staff/dashboard", { requests, user: req.user });
+  } catch (err) {
+    console.error("Error loading dashboard:", err);
+    req.flash("error_msg", "Failed to load dashboard.");
+    res.redirect("/staff/requests");
+  }
 };
 
 // Requests Page
-export const getRequestsPage = async (req, res) => {
-  const requests = await fetchRequests(req.user.department_id);
-  res.render("staff/requests", { requests });
+export const getStaffRequest = async (req, res) => {
+  try {
+    const requests = await fetchStaffRequests(req.user.id);
+    res.render("staff/requests", { requests });
+  } catch (err) {
+    console.error("Error fetching staff requests:", err);
+    req.flash("error_msg", "Failed to load assigned requests.");
+    res.redirect("/staff/dashboard");
+  }
+};
+
+// Fetch all requests for
+export const fetchRequests = async () => {
+  const result = await pool.query(
+    `SELECT r.id, r.status, r.comments,to_char(r.created_at, 'YYYY-MM-DD HH12:MI AM') AS created_at,
+            s.name AS service_name, u.name AS citizen_name
+     FROM requests r
+     JOIN services s ON r.service_id = s.id
+     JOIN users u ON r.user_id = u.id
+     ORDER BY r.created_at DESC`
+  );
+  return result.rows;
 };
 
 // Request Details

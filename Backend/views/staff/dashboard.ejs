@@ -39,9 +39,8 @@ include('../partials/navbar-staff') %>
       <thead>
         <tr>
           <th class="px-2 py-1">Request ID</th>
-          <th class="px-2 py-1">Citizen Name</th>
-          <th class="px-2 py-1">Service Name</th>
           <th class="px-2 py-1">Status</th>
+          <th class="px-2 py-1">Create at</th>
           <th class="px-2 py-1">Actions</th>
         </tr>
       </thead>
@@ -49,32 +48,14 @@ include('../partials/navbar-staff') %>
         <% requests.forEach(request => { %>
         <tr>
           <td class="px-2 py-1"><%= request.id %></td>
-          <td class="px-2 py-1"><%= request.citizen_name %></td>
-          <td class="px-2 py-1"><%= request.service_name %></td>
           <td class="px-2 py-1"><%= request.status %></td>
-          <td class="px-2 py-1">
-            <% if(request.status === 'submitted') { %>
-            <form
-              action="/staff/approve/<%= request.id %>"
-              method="POST"
-              class="inline"
+          <td class="px-2 py-1"><%= request.created_at %></td>
+          <td class="py-3 px-4">
+            <a
+              href="/staff/requests/<%= request.id %>"
+              class="text-blue-600 hover:underline"
+              >View</a
             >
-              <button class="bg-green-500 text-white px-2 py-1 rounded">
-                Approve
-              </button>
-            </form>
-            <form
-              action="/staff/reject/<%= request.id %>"
-              method="POST"
-              class="inline"
-            >
-              <button class="bg-red-500 text-white px-2 py-1 rounded">
-                Reject
-              </button>
-            </form>
-            <% } else { %>
-            <span class="text-gray-500">No actions</span>
-            <% } %>
           </td>
         </tr>
         <% }) %>

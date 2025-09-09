@@ -1,0 +1,108 @@
+<%- include('../partials/header', { title: "Department Head Dashboard" }) %> <%-
+include('../partials/navbar-department_head') %> <% if (success_msg &&
+success_msg.length > 0) { %>
+<div
+  id="flash-success"
+  class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md mb-4"
+>
+  <%= success_msg[0] %>
+</div>
+<% } %> <% if (error_msg && error_msg.length > 0) { %>
+<div
+  id="flash-error"
+  class="bg-red-100 text-red-800 px-4 py-2 rounded-lg shadow-md mb-4"
+>
+  <%= error_msg[0] %>
+</div>
+<% } %>
+<script>
+  setTimeout(function () {
+    const flash = document.getElementById("flash-success");
+    const failFlash = document.getElementById("flash-error");
+    if (failFlash) failFlash.style.display = "none";
+    if (flash) flash.style.display = "none";
+  }, 2000);
+</script>
+<div class="max-w-6xl mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-6">Requests for Your Department</h2>
+
+  <% if (requests && requests.length > 0) { %>
+  <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="py-3 px-4 text-left">Request ID</th>
+        <th class="py-3 px-4 text-left">Citizen</th>
+        <th class="py-3 px-4 text-left">Service</th>
+        <th class="py-3 px-4 text-left">Status</th>
+        <th class="py-3 px-4 text-left">Comments</th>
+        <th class="py-3 px-4 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% requests.forEach(r => { %>
+      <tr class="border-b hover:bg-gray-50">
+        <td class="py-3 px-4"><%= r.id %></td>
+        <td class="py-3 px-4"><%= r.citizen_name %></td>
+        <td class="py-3 px-4"><%= r.service_name %></td>
+        <td class="py-3 px-4">
+          <span
+            class="px-2 py-1 rounded text-sm <%= r.status === 'submitted' ? 'bg-yellow-100 text-yellow-700' : '' %> <%= r.status === 'approved' ? 'bg-green-100 text-green-700' : '' %> <%= r.status === 'rejected' ? 'bg-red-100 text-red-700' : '' %> <%= r.status === 'under_review' ? 'bg-blue-100 text-blue-700' : '' %>"
+          >
+            <%= r.status %>
+          </span>
+        </td>
+        <td class="py-3 px-4"><%= r.comments || '—' %></td>
+
+        <td class="px-2 py-1">
+          <% if(r.status === 'submitted') { %>
+
+          <form
+            action="/staff/approve/<%= r.id %>"
+            method="POST"
+            class="inline"
+          >
+            <button class="bg-green-500 text-white px-2 py-1 rounded">
+              Approve
+            </button>
+          </form>
+          <form action="/staff/reject/<%= r.id %>" method="POST" class="inline">
+            <button class="bg-red-500 text-white px-2 py-1 rounded">
+              Reject
+            </button>
+          </form>
+
+          <form action="/department_head/assign" method="POST" class="inline">
+            <input type="hidden" name="requestId" value="<%= r.id %>" />
+
+            <br />
+            <br />
+            <label for="select">Choose staff</label>
+            <select name="staffId" class="border px-2 py-1 rounded text-sm">
+              <% staff.forEach(s => { %>
+              <option value="<%= s.id %>"><%= s.name %></option>
+              <% }) %>
+            </select>
+            <input
+              type="text"
+              name="notes"
+              placeholder="Add notes to..."
+              class="border px-2 py-1 rounded text-sm w-64"
+            />
+            <button class="bg-blue-500 text-white px-2 py-1 rounded ml-1">
+              Assign
+            </button>
+          </form>
+          <% } else { %>
+          <span class="text-gray-500">No actions</span>
+          <% } %>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <% } else { %>
+  <p class="text-gray-600">No requests found for your department.</p>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

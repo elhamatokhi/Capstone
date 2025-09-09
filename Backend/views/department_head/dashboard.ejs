@@ -7,10 +7,6 @@ include('../partials/navbar-department_head') %>
   <!-- Summary cards -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
     <div class="p-4 bg-white shadow rounded-lg">
-      <h3 class="font-semibold">Total staff</h3>
-      <p class="text-2xl text-blue-600"><%= staff.length %></p>
-    </div>
-    <div class="p-4 bg-white shadow rounded-lg">
       <h3 class="font-semibold">Pending Requests</h3>
       <p class="text-2xl text-green-600">
         <%= requests.filter(r => r.status === 'pending').length %>
@@ -22,27 +18,6 @@ include('../partials/navbar-department_head') %>
         <%= requests.filter(r => r.status === 'approved').length %>
       </p>
     </div>
-  </div>
-
-  <!-- staff Table -->
-  <div class="bg-white shadow rounded-lg p-4 mb-6">
-    <h3 class="font-semibold mb-2">staff in Your Department</h3>
-    <table class="w-full text-left">
-      <thead>
-        <tr>
-          <th class="px-2 py-1">Name</th>
-          <th class="px-2 py-1">Email</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% staff.forEach(officer => { %>
-        <tr>
-          <td class="px-2 py-1"><%= officer.name %></td>
-          <td class="px-2 py-1"><%= officer.email %></td>
-        </tr>
-        <% }) %>
-      </tbody>
-    </table>
   </div>
 
   <!-- Requests Table -->
