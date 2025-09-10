@@ -5,6 +5,10 @@ import {
 } from "../controllers/authinticationController.js";
 import { ensureAuthenticated, requireRoles } from "../middleware/middleware.js";
 import { postContact, getContact } from "../controllers/navBarControllers.js";
+import {
+  changeRequestStatus,
+  getRequestDetails,
+} from "../controllers/requestContoller.js";
 import passport from "passport";
 
 const router = Router();
@@ -58,11 +62,23 @@ router.get(
 
 // About page
 router.get(`/about`, (req, res) => {
-  res.render(`about`);
+  res.render(`about`, {
+    navbarPartial: `../views/partials/navbar-${req.user.role}`,
+  });
 });
 
 // Contact page
 router.get(`/contact`, getContact);
 router.post(`/contact`, postContact);
+
+// Reuest to change status
+// Shared route, but with role-based restrictions
+router.post(
+  "/requests/:id/status",
+  requireRoles("department_head", "admin", "staff"),
+  changeRequestStatus
+);
+
+router.get("/requests/:id", getRequestDetails);
 
 export default router;

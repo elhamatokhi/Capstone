@@ -66,28 +66,12 @@ export const fetchRequestDetails = async (requestId) => {
 
   if (result.rows.length === 0) {
     req.flash("error_msg", "Request not found.");
-    return res.redirect("/staff/requests");
+    return res.redirect("/request/:id");
   }
   return {
     request: result.rows[0],
     documents: docs.rows,
   };
-};
-
-// Route handler of Request Details
-export const getRequestDetails = async (req, res) => {
-  const requestId = req.params.id;
-  try {
-    const requests = await fetchRequestDetails(requestId);
-    res.render("staff/requestDetails", {
-      request: requests.request,
-      documents: requests.documents,
-    });
-  } catch (err) {
-    console.error("Error fetching request details:", err);
-    req.flash("error_msg", "Failed to load request details.");
-    res.redirect("/staff/requests");
-  }
 };
 
 /*-----------------------------------Update request status--------------------------- */
@@ -107,32 +91,5 @@ export const updateStatus = async (status, requestId) => {
     throw error;
   }
 };
-// Approve request
-export const approveRequest = async (req, res) => {
-  const requestId = req.params.id;
 
-  try {
-    await updateStatus("approved", requestId);
-    req.flash("success_msg", "Request approved successfully.");
-    res.redirect(`/staff/requests/${requestId}`);
-  } catch (error) {
-    console.error("Error approving request:", error);
-    req.flash("error_msg", "Failed to approve request.");
-    res.redirect(`/staff/requests/${requestId}`);
-  }
-};
-
-// Reject request
-export const rejectRequest = async (req, res) => {
-  const requestId = req.params.id;
-  try {
-    await updateStatus("rejected", requestId);
-    req.flash("success_msg", "Request rejected successfully.");
-    res.redirect(`/staff/requests/${requestId}`);
-  } catch (error) {
-    console.error("Error rejecting request:", error);
-    req.flash("error_msg", "Failed to reject request.");
-    res.redirect(`/staff/requests/${requestId}`);
-  }
-};
 // Add comments to request

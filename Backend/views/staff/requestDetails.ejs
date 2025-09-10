@@ -1,6 +1,5 @@
 <%- include('../partials/header', { title: "Request Details" }) %> <%-
-include('../partials/navbar-staff') %> <% if (success_msg && success_msg.length
-> 0) { %>
+include(navbarPartial) %> <% if (success_msg && success_msg.length > 0) { %>
 <div
   id="flash-success"
   class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md mb-4"
@@ -97,21 +96,13 @@ include('../partials/navbar-staff') %> <% if (success_msg && success_msg.length
 
   <!-- Actions -->
   <section class="flex flex-wrap gap-4">
-    <form action="/staff/requests/<%= request.id %>/approve" method="POST">
-      <button
-        type="submit"
-        class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-      >
-        Approve
-      </button>
-    </form>
-    <form action="/staff/requests/<%= request.id %>/reject" method="POST">
-      <button
-        type="submit"
-        class="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-      >
-        Reject
-      </button>
+    <form action="/requests/<%= request.id %>/status" method="POST">
+      <select name="status" required>
+        <option value="approved">Approve</option>
+        <option value="rejected">Reject</option>
+        <option value="under_review">Set under review</option>
+      </select>
+      <button type="submit">Update</button>
     </form>
   </section>
 </div>

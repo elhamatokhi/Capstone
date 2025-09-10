@@ -1,14 +1,16 @@
 import pool from "../config/db.js";
 
 export const getContact = async (req, res) => {
-  res.render("contact");
+  res.render("contact", {
+    navbarPartial: `../views/partials/navbar-${req.user.role}`,
+  });
 };
 
 export const postContact = async (req, res) => {
   const { name, email, subject, message } = req.body;
   const user = req.user;
   const role = user.role;
-  console.log(user);
+
   try {
     const values = [name, email, subject, message];
     const query = `INSERT INTO contact_messages (name, email, subject, message) VALUES ($1, $2, $3, $4) RETURNING id`;

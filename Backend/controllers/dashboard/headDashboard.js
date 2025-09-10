@@ -3,7 +3,9 @@ import pool from "../../config/db.js";
 //  fetch requests for a specific department
 export const fetchRequestsByDepartment = async (departmentId) => {
   const result = await pool.query(
-    `SELECT  r.id, r.status, r.comments, to_char(r.created_at, 'YYYY-MM-DD HH24:MI') AS created_at
+    `SELECT  r.id, r.status, r.comments, 
+    s.id AS service_id, 
+    to_char(r.created_at, 'YYYY-MM-DD HH24:MI') AS created_at
       FROM requests r
       JOIN services s ON r.service_id = s.id
       WHERE s.department_id = $1`,
@@ -16,6 +18,7 @@ export const fetchRequestsByDepartment = async (departmentId) => {
 export const headDashboard = async (req, res) => {
   const user = req.user;
   const requests = await fetchRequestsByDepartment(req.user.department_id);
+  console.log(requests);
   res.render("department_head/dashboard", { requests, user });
 };
 
@@ -33,7 +36,7 @@ export const getAllStaff = async (req, res) => {
   } catch (error) {
     console.error("Error fetching staff:", error);
     req.flash("error_msg", "Failed to load staff members.");
-    res.redirect(`${role}/dashboard`);
+    res.redirect(`/${role}/dashboard`);
   }
 };
 
