@@ -42,7 +42,11 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
-    if (err) return res.status(500).json({ message: "Internal server error" });
+    if (err) {
+      console.log("Login error:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+
     if (!user)
       return res
         .status(401)
@@ -50,12 +54,12 @@ export const loginUser = (req, res, next) => {
 
     req.logIn(user, (err) => {
       if (err) return res.status(500).json({ message: "Login failed" });
+
       // return res.json({
       //   message: "Login successful",
       //   user: { id: user.id, name: user.name },
       // });
       const role = req.user.role;
-      console.log("Login successful, user:", req.user);
       return res.redirect(`/${role}/dashboard`);
     });
   })(req, res, next);

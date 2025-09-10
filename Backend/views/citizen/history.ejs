@@ -21,6 +21,46 @@ success_msg.length > 0) { %>
 <div class="max-w-5xl mx-auto p-6">
   <h2 class="text-2xl font-bold mb-4">My Requests</h2>
 
+ <!-- Search and Filter Form -->
+<div class="max-w-6xl mx-auto p-6 mb-4 bg-white shadow rounded-lg">
+  <form action="/requests/search" method="GET" class="search-form">
+    <input
+      type="text"
+      name="name"
+      placeholder="Name"
+      value="<%= filters.name || '' %>"
+    />
+    <input
+      type="text"
+      name="requestId"
+      placeholder="Request ID"
+      value="<%= filters.requestId || '' %>"
+    />
+
+    <select name="status">
+      <option value="">-- Status --</option>
+      <option value="under_review" <%= filters.status==='under_review' ? 'selected' : '' %>>under_review</option>
+      <option value="approved" <%= filters.status==='approved' ? 'selected' : '' %>>Approved</option>
+      <option value="rejected" <%= filters.status==='rejected' ? 'selected' : '' %>>Rejected</option>
+    </select>
+
+    <label>Date Range:</label>
+    <input
+      type="date"
+      name="startDate"
+      value="<%= filters.startDate || '' %>"
+    />
+    <input
+      type="date"
+      name="endDate"
+      value="<%= filters.endDate || '' %>"
+    />
+
+    <button type="submit">Search</button>
+  </form>
+</div>
+
+
   <table class="w-full border-collapse bg-white shadow rounded-lg">
     <thead>
       <tr class="bg-gray-100">
