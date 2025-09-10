@@ -13,7 +13,7 @@ import {
   editProfile,
   getProfile,
   updateProfile,
-} from "../controllers/dashboard/citizenDashboard.js";
+} from "../controllers/profilesController.js";
 import passport from "passport";
 
 const router = Router();

@@ -4,9 +4,6 @@ import {
   services,
   requestService,
   submitRequest,
-  getProfile,
-  updateProfile,
-  editProfile,
   getHistory,
   deleteRequest,
   paymentSuccess,
@@ -33,11 +30,6 @@ citizenRouter.post(
   upload.array("documents", 10),
   submitRequest
 );
-
-// Citizen profile
-// citizenRouter.get("/profile", getProfile);
-// citizenRouter.get("/profile/edit", editProfile);
-// citizenRouter.post("/profile/edit", updateProfile);
 
 // Citizen request history
 citizenRouter.get("/history", getHistory);
