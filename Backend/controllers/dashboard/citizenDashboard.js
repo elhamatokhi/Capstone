@@ -1,12 +1,6 @@
 import pool from "../../config/db.js";
 
-// Get citizen dashboard
-// export const getDashboard = (req, res) => {
-//   const role = req.user.role;
-//   console.log(req.user);
-//   res.render(`${role}/dashboard`, { user: req.user });
-// };
-
+// Dashboard
 export const getDashboard = (req, res) => {
   const role = req.user.role;
   const requests = res.locals.requests || []; // get requests from middleware
@@ -158,6 +152,7 @@ export const getProfile = async (req, res) => {
   const userId = req.user.id;
 
   try {
+    // Fetch user details from DB
     const userResult = await pool.query("SELECT * FROM users WHERE id = $1", [
       userId,
     ]);
@@ -171,7 +166,10 @@ export const getProfile = async (req, res) => {
       user.date_of_birth = "Enter date of birth";
     }
 
-    res.render("citizen/profile", { user });
+    res.render(`profile`, {
+      user,
+      navbarPartial: `../views/partials/navbar-${req.user.role}`,
+    });
   } catch (error) {
     console.log("Error", error);
   }
@@ -180,7 +178,11 @@ export const getProfile = async (req, res) => {
 // Get edit
 export const editProfile = (req, res) => {
   const user = req.user;
-  res.render("edit", { user });
+  console.log(user);
+  res.render("edit", {
+    user,
+    navbarPartial: `../views/partials/navbar-${req.user.role}`,
+  });
 };
 
 export const updateProfile = async (req, res) => {
@@ -205,7 +207,7 @@ export const updateProfile = async (req, res) => {
     }
 
     req.flash("success_msg", "Profile updated successfully!");
-    res.redirect(`/${role}/profile`);
+    res.redirect(`/profile`);
   } catch (error) {
     console.log("Error", error);
     res.status(500).send("Internal Server Error");

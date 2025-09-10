@@ -1,6 +1,5 @@
-<%- include('../partials/header', { title: "Citizen Profile" }) %> <%-
-include('../partials/navbar-citizen.ejs') %> <% if (success_msg &&
-success_msg.length > 0) { %>
+<%- include('./partials/header', { title: "Profile" }) %> <%-
+include(navbarPartial) %> <% if (success_msg && success_msg.length > 0) { %>
 <div
   id="flash-success"
   class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md"
@@ -27,7 +26,7 @@ success_msg.length > 0) { %>
 
       <div class="flex gap-4">
         <a
-          href="/citizen/profile/edit"
+          href="/profile/edit"
           class="px-6 py-2 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 transition"
         >
           Edit
@@ -67,4 +66,4 @@ success_msg.length > 0) { %>
   </div>
 </div>
 
-<%- include('../partials/footer') %>
+<%- include('./partials/footer') %>

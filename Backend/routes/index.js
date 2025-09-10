@@ -9,6 +9,11 @@ import {
   changeRequestStatus,
   getRequestDetails,
 } from "../controllers/requestContoller.js";
+import {
+  editProfile,
+  getProfile,
+  updateProfile,
+} from "../controllers/dashboard/citizenDashboard.js";
 import passport from "passport";
 
 const router = Router();
@@ -71,14 +76,18 @@ router.get(`/about`, (req, res) => {
 router.get(`/contact`, getContact);
 router.post(`/contact`, postContact);
 
-// Reuest to change status
-// Shared route, but with role-based restrictions
+// Shared route with role-based restrictions
 router.post(
   "/requests/:id/status",
   requireRoles("department_head", "admin", "staff"),
   changeRequestStatus
 );
 
+// Request details page
 router.get("/requests/:id", getRequestDetails);
 
+// Get profile details of all users
+router.get("/profile", getProfile);
+router.get("/profile/edit", editProfile);
+router.post("/profile/edit", updateProfile);
 export default router;
