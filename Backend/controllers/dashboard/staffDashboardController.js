@@ -36,6 +36,7 @@ export const staffDashboard = async (req, res) => {
 export const getStaffRequest = async (req, res) => {
   const userId = req.user.id;
   const { requestId, status, serviceName, startDate, endDate } = req.query;
+
   try {
     const requests = await fetchStaffRequests(req.user.id);
     let query = db("requests as r")
@@ -48,7 +49,8 @@ export const getStaffRequest = async (req, res) => {
         "r.created_at"
       )
       .join("services as s", "r.service_id", "s.id")
-      .where("r.user_id", userId);
+      .join("request_assignments as ra", "r.id", "ra.request_id")
+      .where("ra.staff_id", userId);
 
     if (requestId) query = query.where("r.id", requestId);
     if (status) query = query.where("r.status", status);
@@ -56,8 +58,11 @@ export const getStaffRequest = async (req, res) => {
     if (startDate && endDate)
       query = query.whereBetween("r.created_at", [startDate, endDate]);
 
-    const filterdReqs = await query;
-    res.render("staff/requests", { requests, filterdReqs, filters: req.query });
+    const filteredReqs = await query;
+    res.render("staff/requests", {
+      requests: filteredReqs,
+      filters: req.query,
+    });
   } catch (err) {
     console.error("Error fetching staff requests:", err);
     req.flash("error_msg", "Failed to load assigned requests.");

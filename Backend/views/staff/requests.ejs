@@ -8,24 +8,17 @@ include('../partials/navbar-staff') %>
     <label for="form">
       Seach and Filter
       <form action="/staff/requests" method="GET" class="search-form">
-        <input type="text" name="service_name" placeholder="Name" />
-        <input type="text" name="id" placeholder="Request ID" />
-
         <select name="status">
           <option value="">-- Status --</option>
           <option value="under_review">under_review</option>
           <option value="approved">Approved</option>
           <option value="rejected">Rejected</option>
         </select>
-
-        <label>Date Range:</label>
-        <input type="date" name="startDate" />
-        <input type="date" name="endDate" />
-
         <button type="submit">Search</button>
       </form>
     </label>
   </div>
+
   <% if (requests && requests.length > 0) { %>
   <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
     <thead class="bg-gray-100">
