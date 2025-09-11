@@ -8,12 +8,51 @@ include('../partials/navbar-staff') %>
     <label for="form">
       Seach and Filter
       <form action="/staff/requests" method="GET" class="search-form">
+        <input
+          type="text"
+          name="service_name"
+          placeholder="Service Name"
+          value="<%= filters.service_name || '' %>"
+        />
+
+        <input
+          type="text"
+          name="requestId"
+          placeholder="Request ID"
+          value="<%= filters.requestId|| '' %>"
+        />
+
         <select name="status">
           <option value="">-- Status --</option>
-          <option value="under_review">under_review</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
+          <option
+            value="<%= filters.status==='under_review' ? 'selected' : '' %>"
+          >
+            Under_review
+          </option>
+          <option value="<%= filters.status==='approved' ? 'selected' : '' %>">
+            Approved
+          </option>
+          <option value="<%= filters.status==='rejected' ? 'selected' : '' %>">
+            Rejected
+          </option>
         </select>
+
+        <hr />
+        <br />
+
+        <label for="startDate">From: </label>
+        <input
+          type="date"
+          name="startDate"
+          value="<%= filters.startDate  || ''%>"
+        />
+        <label for="endDate">To: </label>
+        <input
+          type="date"
+          name="endDate"
+          value="<%= filters.endDate || '' %>"
+        />
+
         <button type="submit">Search</button>
       </form>
     </label>
@@ -46,9 +85,7 @@ include('../partials/navbar-staff') %>
         <td class="py-3 px-4"><%= r.comments || '—' %></td>
         <td class="py-3 px-4"><%= r.created_at %></td>
         <td class="py-3 px-4">
-          <a
-            href="/staff/requests/<%= r.id %>"
-            class="text-blue-600 hover:underline"
+          <a href="/requests/<%= r.id %>" class="text-blue-600 hover:underline"
             >View</a
           >
         </td>

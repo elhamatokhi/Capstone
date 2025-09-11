@@ -38,7 +38,6 @@ export const getStaffRequest = async (req, res) => {
   const { requestId, status, serviceName, startDate, endDate } = req.query;
 
   try {
-    const requests = await fetchStaffRequests(req.user.id);
     let query = db("requests as r")
       .select(
         "r.id",
