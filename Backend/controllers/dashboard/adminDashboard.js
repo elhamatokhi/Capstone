@@ -13,11 +13,29 @@ export const fetchRequests = async () => {
   return result.rows;
 };
 
+export const fetchServices = async () => {
+  const result = await pool.query(`SELECT * FROM services`);
+  return result.rows;
+};
+
 // Dashboard
 export const adminDashboard = async (req, res) => {
   const user = req.user;
+  const users = await fetchUsers();
   const requests = await fetchRequests();
-  res.render("admin/dashboard", { requests, user });
+  const services = await fetchServices();
+  res.render("admin/dashboard", { requests, user, users, services });
+};
+
+// getAll requests
+export const getAllRequests = async (req, res) => {
+  const requests = await fetchRequests();
+  res.render("admin/requests", { requests });
+};
+// getAll requests
+export const getAllServices = async (req, res) => {
+  const services = await fetchServices();
+  res.render("admin/services", { services });
 };
 
 // fetch all users
@@ -186,5 +204,52 @@ export const deleteService = async (req, res) => {
   } catch (error) {
     console.error("Error deleting service: ", error);
     res.status(500).send("Something went wrong.");
+  }
+};
+
+// POST /admin/departments/:id/head
+export const assignDepartmentHead = async (req, res) => {
+  const departmentId = req.params.id;
+  const { staffId } = req.body;
+
+  try {
+    // 1️⃣ Demote current head if any
+    await pool.query(
+      `UPDATE users SET role = 'staff' WHERE role = 'department_head' AND department_id = $1`,
+      [departmentId]
+    );
+
+    // 2️⃣ Promote new head
+    await pool.query(
+      `UPDATE users SET role = 'department_head' WHERE id = $1 AND department_id = $2`,
+      [staffId, departmentId]
+    );
+
+    req.flash("success_msg", "Department head updated successfully!");
+    res.redirect("/admin/departments");
+  } catch (err) {
+    console.error("Error updating department head:", err);
+    req.flash("error_msg", "Failed to update department head.");
+    res.redirect("/admin/departments");
+  }
+};
+
+// POST /admin/staff/:id/department
+export const assignStaffDepartment = async (req, res) => {
+  const staffId = req.params.id;
+  const { departmentId } = req.body;
+
+  try {
+    await pool.query(
+      `UPDATE users SET department_id = $1 WHERE id = $2 AND role = 'staff'`,
+      [departmentId, staffId]
+    );
+
+    req.flash("success_msg", "Staff assigned to department successfully!");
+    res.redirect("/admin/staff");
+  } catch (err) {
+    console.error("Error assigning staff to department:", err);
+    req.flash("error_msg", "Failed to assign staff.");
+    res.redirect("/admin/staff");
   }
 };

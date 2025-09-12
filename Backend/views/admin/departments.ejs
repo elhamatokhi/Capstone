@@ -56,6 +56,21 @@ include("../partials/navbar-admin") %> <% if (success_msg && success_msg.length
           <p class="text-gray-500">No department head assigned.</p>
           <% } %>
         </div>
+        
+        <!-- Form to assign a new head -->
+        <form action="/admin/departments/<%= d.id %>/head" method="POST" class="mt-2 flex items-center space-x-2">
+        <select name="staffId" class="border rounded px-2 py-1">
+            <% d.staff.forEach(st => { %>
+            <option value="<%= st.id %>" <%= st.role === 'head' ? 'selected' : '' %>>
+                <%= st.name %> - <%= st.role %>
+            </option>
+            <% }) %>
+        </select>
+        <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+            Assign Head
+        </button>
+        </form>
+
 
         <!-- Services -->
         <div>
