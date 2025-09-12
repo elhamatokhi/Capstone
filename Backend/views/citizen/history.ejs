@@ -23,40 +23,34 @@ success_msg.length > 0) { %>
 
   <!-- Search and Filter Form -->
   <div class="max-w-6xl mx-auto p-6 mb-4 bg-white shadow rounded-lg">
-    <form action="/requests/search" method="GET" class="search-form">
+    <h3 class="font-semibold mb-2">Search and Filter</h3>
+    <form action="/citizen/history" method="GET" class="search-form">
       <input
         type="text"
-        name="name"
-        placeholder="Name"
-        value="<%= filters.name || '' %>"
-      />
-      <input
-        type="text"
-        name="requestId"
-        placeholder="Request ID"
-        value="<%= filters.requestId || '' %>"
+        name="service_name"
+        placeholder="Service Name"
+        value="<%= filters.service_name || '' %>"
       />
 
       <select name="status">
         <option value="">-- Status --</option>
-        <option
-          value="<%= filters.status==='under_review' ? 'selected' : '' %>"
-        ></option>
-        <option
-          value="<%= filters.status==='approved' ? 'selected' : '' %>"
-        ></option>
-        <option
-          value=" <%= filters.status==='rejected' ? 'selected' : '' %"
-        ></option>
+        <option value="under_review" <%= filters.status === 'under_review' ? 'selected' : '' %>>Under Review</option>
+        <option value="approved" <%= filters.status === 'approved' ? 'selected' : '' %>>Approved</option>
+        <option value="rejected" <%= filters.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
       </select>
 
-      <label>Date Range:</label>
+      <label for="startDate">From: </label>
       <input
         type="date"
         name="startDate"
         value="<%= filters.startDate || '' %>"
       />
-      <input type="date" name="endDate" value="<%= filters.endDate || '' %>" />
+      <label for="endDate">To: </label>
+      <input
+        type="date"
+        name="endDate"
+        value="<%= filters.endDate || '' %>"
+      />
 
       <button type="submit">Search</button>
     </form>

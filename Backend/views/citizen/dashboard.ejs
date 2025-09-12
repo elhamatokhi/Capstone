@@ -13,12 +13,28 @@ success_msg.length > 0) { %>
     const flash = document.getElementById("flash-success");
     if (flash) flash.style.display = "none";
   }, 3000);
+
+  const btn = document.getElementById("notif-btn");
+  const dropdown = document.getElementById("notif-dropdown");
+
+  btn.addEventListener("click", () => {
+    dropdown.classList.toggle("hidden");
+  });
+
+  // Optional: close dropdown if clicked outside
+  window.addEventListener("click", (e) => {
+    if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.add("hidden");
+    }
+  });
 </script>
+
+<span class="badge"><%= unreadCount %></span>
 
 <div class="max-w-5xl mx-auto p-6">
   <h2 class="text-2xl font-bold mb-4">Available Services</h2>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <% services.forEach(service => { %>
+    <% if (services && services.length) { %> <% services.forEach(service => { %>
     <div class="p-4 bg-white shadow rounded-lg">
       <h3 class="text-lg font-semibold"><%= service.name %></h3>
       <p class="text-sm text-gray-600"><%= service.description %></p>
@@ -34,7 +50,7 @@ success_msg.length > 0) { %>
         Request
       </a>
     </div>
-    <% }) %>
+    <% }) %> <% } %>
   </div>
 </div>
 

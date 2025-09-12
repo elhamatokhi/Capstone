@@ -12,7 +12,7 @@ staffRouter.use(requireRoles("staff"));
 /**--------------------------Citizen routes------------------------ */ //
 
 // Staff Dashboard
-staffRouter.get("/dashboard", staffDashboard, getDashboard);
+staffRouter.get("/dashboard", staffDashboard);
 
 // Citizen requests
 staffRouter.get("/requests", getStaffRequest);

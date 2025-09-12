@@ -1,19 +1,34 @@
 import pool from "../../config/db.js";
+import { db } from "../../config/knex.js";
+import { fetchNotifications } from "../requestContoller.js";
 
 // Dashboard
-export const getDashboard = (req, res) => {
-  const role = req.user.role;
-  const requests = res.locals.requests || []; // get requests from middleware
-  res.render(`${role}/dashboard`, { user: req.user, requests });
+export const getDashboard = async (req, res) => {
+  try {
+    // Fetch notifications for logged-in user
+    const notifications = await fetchNotifications(req.user.id);
+
+    const unreadCount = notifications.filter((n) => !n.is_read).length;
+
+    res.render(`citizen/dashboard`, {
+      user: req.user,
+      services: req.servicesList, // coming from services middleware
+      notifications,
+      unreadCount,
+    });
+  } catch (error) {
+    console.error("Error loading dashboard:", error);
+    req.flash("error_msg", "Failed to load dashboard.");
+    res.redirect("/");
+  }
 };
 
 // Services a citizen can request
-export const services = async (req, res) => {
+export const services = async (req, res, next) => {
   try {
     const result = await pool.query(`SELECT * FROM services`);
-    const servicesList = result.rows;
-
-    res.render("citizen/dashboard", { services: servicesList });
+    req.servicesList = result.rows;
+    next();
   } catch (error) {
     console.log(`Error fetching services: `, error);
     res.status(500).send("Internal server error.");
@@ -151,17 +166,27 @@ export const deleteRequest = async (req, res) => {
 
 export const getHistory = async (req, res) => {
   const userId = req.user.id;
+  const { status, service_name, startDate, endDate } = req.query;
   try {
-    const historyResult = await pool.query(
-      `SELECT r.id, s.name AS service_name, s.fee AS service_fee, r.status, r.comments, r.created_at
-       FROM requests r
-       JOIN services s ON r.service_id = s.id
-       WHERE r.user_id = $1
-       ORDER BY r.created_at DESC`,
-      [userId]
-    );
-    const requests = historyResult.rows;
-    res.render("citizen/history", { requests });
+    let query = db("requests as r")
+      .select(
+        "r.id",
+        "s.name as service_name",
+        "s.fee as service_fee",
+        "r.status",
+        "r.comments",
+        "r.created_at"
+      )
+      .join("services as s", "r.service_id", "s.id")
+      .where("r.user_id", userId);
+
+    if (status) query = query.where("r.status", status);
+    if (service_name) query = query.whereILike("s.name", `%${service_name}%`);
+    if (startDate && endDate)
+      query = query.whereBetween("r.created_at", startDate, endDate);
+
+    const requests = await query;
+    res.render("citizen/history", { requests, filters: req.query });
   } catch (error) {
     console.log("Error fetching history:", error);
     res.status(500).send("Internal server error.");

@@ -11,6 +11,8 @@ import {
   getDashboard,
 } from "../controllers/dashboard/citizenDashboard.js";
 
+import { markNotificationAsRead } from "../controllers/requestContoller.js";
+
 import { upload } from "../middleware/multerConfig.js";
 
 const citizenRouter = Router();
@@ -30,6 +32,7 @@ citizenRouter.post(
   upload.array("documents", 10),
   submitRequest
 );
+citizenRouter.post("/notifications/:id/read", markNotificationAsRead);
 
 // Citizen request history
 citizenRouter.get("/history", getHistory);

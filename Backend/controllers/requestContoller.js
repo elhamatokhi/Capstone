@@ -23,11 +23,19 @@ export const changeRequestStatus = async (req, res) => {
   const { status } = req.body;
 
   try {
-    await updateStatus(status, requestId);
+    // Update request and return the updated row
+    const updatedRequest = await updateStatus(status, requestId);
+
+    // Create a notification for the citizen
+    const message = `Your request ${requestId} status changed to: ${status}`;
+    await pool.query(
+      `INSERT INTO notifications (user_id, message) 
+           VALUES ($1, $2)`,
+      [updatedRequest.user_id, message]
+    );
 
     req.flash("success_msg", `Request ${status} successfully.`);
     res.redirect(`/requests/${requestId}`);
-    // dynamic redirect depending on role
   } catch (error) {
     console.error("Error changing request status:", error);
     req.flash("error_msg", "Failed to update request status.");
@@ -82,4 +90,42 @@ export const getRequestDetails = async (req, res) => {
     req.flash("error_msg", "Failed to load request details.");
     res.redirect("/staff/requests");
   }
+};
+
+// Fetch notification
+export const fetchNotifications = async (userId) => {
+  const result = await pool.query(
+    `SELECT id, message, is_read, created_at    
+      FROM notifications
+      WHERE user_id = $1
+      ORDER BY created_at DESC
+      LIMIT 10`,
+    [userId]
+  );
+  return result.rows;
+};
+
+// Mark notification as read
+export const markNotificationAsRead = async (req, res) => {
+  try {
+    await pool.query(
+      "UPDATE notifications SET is_read = TRUE WHERE id = $1 AND user_id = $2",
+      [req.params.id, req.user.id]
+    );
+    res.redirect("/citizen/dashboard");
+  } catch (error) {
+    console.error("Error marking notification as read:", error);
+    res.redirect("/citizen/dashboard");
+  }
+};
+
+// Fetch unread notification count
+export const fetchUnreadCount = async (userId) => {
+  const result = await pool.query(
+    `SELECT COUNT(*) AS unread_count
+      FROM notifications    
+      WHERE user_id = $1 AND is_read = FALSE`,
+    [userId]
+  );
+  return result.rows[0].unread_count;
 };
