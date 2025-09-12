@@ -11,7 +11,7 @@ departmentHead.use(requireRoles("department_head"));
 /* ----------------------------- Department Head ROUTES -------------------------- */
 
 // Head Dashboard
-departmentHead.get("/dashboard", headDashboard, getDashboard);
+departmentHead.get("/dashboard", headDashboard);
 
 // Assign tasks to staff
 departmentHead.get("/staff", getAllStaff);

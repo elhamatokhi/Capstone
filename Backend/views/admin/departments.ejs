@@ -1,0 +1,90 @@
+<%- include("../partials/header", { title: "Departments" }) %> <%-
+include("../partials/navbar-admin") %>
+
+<div class="max-w-5xl mx-auto p-6">
+  <h1 class="text-2xl font-bold mb-6">Departments</h1>
+
+  <% if (departments.length === 0) { %>
+  <p class="text-gray-600">No departments found.</p>
+  <% } else { %>
+  <div class="space-y-4">
+    <% departments.forEach(d => { %>
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <!-- Department header (clickable) -->
+      <button
+        class="w-full flex justify-between items-center p-4 bg-blue-600 text-white font-semibold focus:outline-none"
+        onclick="toggleDetails('<%= d.id %>')"
+      >
+        <span><%= d.name %></span>
+        <svg
+          id="icon-<%= d.id %>"
+          class="w-5 h-5 transform transition-transform"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+
+      <!-- Department details (hidden by default) -->
+      <div id="details-<%= d.id %>" class="hidden p-4 space-y-4">
+        <!-- Department Head -->
+        <div>
+          <h3 class="text-lg font-semibold mb-2">Department Head</h3>
+          <% if (d.head) { %>
+          <p class="text-gray-700"><%= d.head.name %> (<%= d.head.email %>)</p>
+          <% } else { %>
+          <p class="text-gray-500">No department head assigned.</p>
+          <% } %>
+        </div>
+
+        <!-- Services -->
+        <div>
+          <h3 class="text-lg font-semibold mb-2">Services</h3>
+          <% if (d.services && d.services.length > 0) { %>
+          <ul class="list-disc list-inside space-y-1 text-gray-700">
+            <% d.services.forEach(s => { %>
+            <li><%= s.name %> - $<%= s.price %></li>
+            <% }) %>
+          </ul>
+          <% } else { %>
+          <p class="text-gray-500">No services available.</p>
+          <% } %>
+        </div>
+
+        <!-- Staff -->
+        <div>
+          <h3 class="text-lg font-semibold mb-2">Staff</h3>
+          <% if (d.staff && d.staff.length > 0) { %>
+          <ul class="list-disc list-inside space-y-1 text-gray-700">
+            <% d.staff.forEach(st => { %>
+            <li><%= st.name %> - <%= st.role %> (<%= st.email %>)</li>
+            <% }) %>
+          </ul>
+          <% } else { %>
+          <p class="text-gray-500">No staff assigned.</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<script>
+  function toggleDetails(id) {
+    const details = document.getElementById(`details-${id}`);
+    const icon = document.getElementById(`icon-${id}`);
+    details.classList.toggle("hidden");
+    icon.classList.toggle("rotate-180");
+  }
+</script>
+
+<%- include("../partials/footer") %>

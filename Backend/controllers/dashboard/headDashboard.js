@@ -4,8 +4,8 @@ import pool from "../../config/db.js";
 export const fetchRequestsByDepartment = async (departmentId) => {
   const result = await pool.query(
     `SELECT  r.id, r.status, r.comments, 
-    s.id AS service_id, 
-    to_char(r.created_at, 'YYYY-MM-DD HH24:MI') AS created_at
+      s.id AS service_id, 
+      to_char(r.created_at, 'YYYY-MM-DD HH24:MI') AS created_at
       FROM requests r
       JOIN services s ON r.service_id = s.id
       WHERE s.department_id = $1`,

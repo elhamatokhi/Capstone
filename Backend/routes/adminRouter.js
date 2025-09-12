@@ -2,7 +2,10 @@ import { Router } from "express";
 import { ensureAuthenticated, requireRoles } from "../middleware/middleware.js";
 import { getDashboard } from "../controllers/dashboard/citizenDashboard.js";
 import { adminDashboard } from "../controllers/dashboard/adminDashboard.js";
-import { fetchRequests } from "../controllers/dashboard/adminDashboard.js";
+import {
+  fetchRequests,
+  getAllDepartments,
+} from "../controllers/dashboard/adminDashboard.js";
 const adminRouter = Router();
 
 adminRouter.use(requireRoles("admin"));
@@ -15,6 +18,9 @@ adminRouter.get("/dashboard", adminDashboard, getDashboard);
 
 // Get all requests
 adminRouter.get("/requests", fetchRequests);
+
+// Manage Departments
+adminRouter.get("/departments", getAllDepartments);
 
 /* ----------------------------- Admin ROUTES -------------------------- */
 

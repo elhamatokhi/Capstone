@@ -1,4 +1,5 @@
 import pool from "../config/db.js";
+// import { sendEmail } from "../config/mailer.js";
 
 // Update in DB
 export const updateStatus = async (status, requestId) => {
@@ -34,6 +35,19 @@ export const changeRequestStatus = async (req, res) => {
       [updatedRequest.user_id, message]
     );
 
+    // Get the user’s email
+    const userResult = await pool.query(
+      "SELECT email FROM users WHERE id = $1",
+      [updatedRequest.user_id]
+    );
+    const userEmail = userResult.rows[0].email;
+
+    // await sendEmail({
+    //   to: userEmail,
+    //   subject: "Request status update",
+    //   text: `Your request #${requestId} status changed to: ${status}`,
+    //   html: `<p>Your request #${requestId} status changed to: ${status}</p>`,
+    // });
     req.flash("success_msg", `Request ${status} successfully.`);
     res.redirect(`/requests/${requestId}`);
   } catch (error) {
@@ -117,15 +131,4 @@ export const markNotificationAsRead = async (req, res) => {
     console.error("Error marking notification as read:", error);
     res.redirect("/citizen/dashboard");
   }
-};
-
-// Fetch unread notification count
-export const fetchUnreadCount = async (userId) => {
-  const result = await pool.query(
-    `SELECT COUNT(*) AS unread_count
-      FROM notifications    
-      WHERE user_id = $1 AND is_read = FALSE`,
-    [userId]
-  );
-  return result.rows[0].unread_count;
 };

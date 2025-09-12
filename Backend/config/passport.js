@@ -37,9 +37,14 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      accessType: "offline",
+      prompt: "consent",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        console.log("accessToken:", accessToken);
+        console.log("refreshToken:", refreshToken);
+
         const email = profile.emails[0].value;
         const username = profile.displayName;
 

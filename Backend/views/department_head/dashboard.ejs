@@ -2,7 +2,9 @@
 include('../partials/navbar-department_head') %>
 
 <div class="max-w-6xl mx-auto p-6">
-  <h2 class="text-2xl font-bold mb-4">Department Head Dashboard</h2>
+  <h2 class="text-2xl font-bold mb-4">
+    <%= user.name %>'s Dashboard <small class="text-gray-400">(head)</small>
+  </h2>
 
   <!-- Summary cards -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -27,7 +29,6 @@ include('../partials/navbar-department_head') %>
       <thead>
         <tr>
           <th class="px-2 py-1">Request ID</th>
-          <th class="px-2 py-1">Citizen Name</th>
           <th class="px-2 py-1">Service ID</th>
           <th class="px-2 py-1">Status</th>
           <th class="px-2 py-1">Actions</th>
@@ -37,7 +38,6 @@ include('../partials/navbar-department_head') %>
         <% requests.forEach(request => { %>
         <tr>
           <td class="px-2 py-1"><%= request.id %></td>
-          <td class="px-2 py-1"><%= request.citizen_name %></td>
           <td class="px-2 py-1"><%= request.service_id %></td>
           <td class="px-2 py-1"><%= request.status %></td>
           <td class="py-3 px-4">
