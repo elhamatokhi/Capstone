@@ -32,7 +32,6 @@ export const getProfile = async (req, res) => {
 // Get edit
 export const editProfile = (req, res) => {
   const user = req.user;
-  console.log(user);
   res.render("edit", {
     user,
     navbarPartial: `../views/partials/navbar-${req.user.role}`,
@@ -42,7 +41,6 @@ export const editProfile = (req, res) => {
 export const updateProfile = async (req, res) => {
   const { name, email, national_id, date_of_birth } = req.body;
   const userId = req.user.id;
-  const role = req.user.role;
 
   const query = `UPDATE users
                  SET name = $1, email = $2, national_id = $3, date_of_birth = $4

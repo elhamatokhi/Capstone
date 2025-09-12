@@ -1,0 +1,60 @@
+<%- include("../partials/header", { title: "Edit Service" }) %> <%-
+include("../partials/navbar-admin") %>
+
+<div class="max-w-md mx-auto mt-10 p-6 bg-white shadow rounded-lg">
+  <h1 class="text-2xl font-bold mb-6">Edit Service</h1>
+
+  <form
+    action="/admin/services/<%= service.id %>/edit"
+    method="POST"
+    class="space-y-4"
+  >
+    <!-- Service Name -->
+    <div>
+      <label for="name" class="block font-semibold mb-1">Service Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        value="<%= service.name %>"
+        class="w-full border rounded px-3 py-2"
+        required
+      />
+    </div>
+
+    <!-- Service Fee -->
+    <div>
+      <label for="fee" class="block font-semibold mb-1">Fee</label>
+      <input
+        type="number"
+        id="fee"
+        name="fee"
+        value="<%= service.fee %>"
+        class="w-full border rounded px-3 py-2"
+        required
+      />
+    </div>
+
+    <!-- Hidden department_id -->
+    <input
+      type="hidden"
+      name="department_id"
+      value="<%= service.department_id %>"
+    />
+
+    <!-- Buttons -->
+    <div class="flex justify-between items-center">
+      <button
+        type="submit"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Save Changes
+      </button>
+      <a href="/admin/departments" class="text-gray-600 hover:underline"
+        >Cancel</a
+      >
+    </div>
+  </form>
+</div>
+
+<%- include("../partials/footer") %>

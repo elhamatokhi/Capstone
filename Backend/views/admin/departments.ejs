@@ -1,5 +1,19 @@
 <%- include("../partials/header", { title: "Departments" }) %> <%-
-include("../partials/navbar-admin") %>
+include("../partials/navbar-admin") %> <% if (success_msg && success_msg.length
+> 0) { %>
+<div
+  id="flash-success"
+  class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md"
+>
+  <%= success_msg[0] %>
+</div>
+<% } %>
+<script>
+  setTimeout(function () {
+    const flash = document.getElementById("flash-success");
+    if (flash) flash.style.display = "none";
+  }, 2000);
+</script>
 
 <div class="max-w-5xl mx-auto p-6">
   <h1 class="text-2xl font-bold mb-6">Departments</h1>
@@ -10,7 +24,6 @@ include("../partials/navbar-admin") %>
   <div class="space-y-4">
     <% departments.forEach(d => { %>
     <div class="bg-white shadow rounded-lg overflow-hidden">
-      <!-- Department header (clickable) -->
       <button
         class="w-full flex justify-between items-center p-4 bg-blue-600 text-white font-semibold focus:outline-none"
         onclick="toggleDetails('<%= d.id %>')"
@@ -47,15 +60,74 @@ include("../partials/navbar-admin") %>
         <!-- Services -->
         <div>
           <h3 class="text-lg font-semibold mb-2">Services</h3>
+
           <% if (d.services && d.services.length > 0) { %>
           <ul class="list-disc list-inside space-y-1 text-gray-700">
             <% d.services.forEach(s => { %>
-            <li><%= s.name %> - $<%= s.price %></li>
+            <li class="flex justify-between items-center">
+              <span><%= s.name %> - $<%= s.fee %></span>
+
+              <!-- Edit Service -->
+              <form
+                action="/admin/services/<%= s.id %>/edit"
+                method="GET"
+                class="inline"
+              >
+                <button
+                  class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+                >
+                  Edit
+                </button>
+              </form>
+
+              <!-- Delete Service -->
+              <form
+                action="/admin/services/<%= s.id %>/delete"
+                method="POST"
+                class="inline"
+                onsubmit="return confirm('Are you sure you want to delte this service?');"
+              >
+                <button
+                  class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              </form>
+            </li>
             <% }) %>
           </ul>
           <% } else { %>
           <p class="text-gray-500">No services available.</p>
           <% } %>
+
+          <!-- Add Service Form -->
+          <form
+            action="/admin/services/add"
+            method="POST"
+            class="mt-2 flex space-x-2"
+          >
+            <input type="hidden" name="department_id" value="<%= d.id %>" />
+            <input
+              type="text"
+              name="name"
+              placeholder="Service Name"
+              class="border rounded px-2 py-1"
+              required
+            />
+            <input
+              type="number"
+              name="fee"
+              placeholder="fee"
+              class="border rounded px-2 py-1"
+              required
+            />
+            <button
+              type="submit"
+              class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+            >
+              + Add Service
+            </button>
+          </form>
         </div>
 
         <!-- Staff -->

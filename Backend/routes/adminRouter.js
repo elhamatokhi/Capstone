@@ -1,7 +1,14 @@
 import { Router } from "express";
 import { ensureAuthenticated, requireRoles } from "../middleware/middleware.js";
 import { getDashboard } from "../controllers/dashboard/citizenDashboard.js";
-import { adminDashboard } from "../controllers/dashboard/adminDashboard.js";
+import {
+  addService,
+  adminDashboard,
+  deleteService,
+  editService,
+  getAllUsers,
+  getEditService,
+} from "../controllers/dashboard/adminDashboard.js";
 import {
   fetchRequests,
   getAllDepartments,
@@ -21,6 +28,19 @@ adminRouter.get("/requests", fetchRequests);
 
 // Manage Departments
 adminRouter.get("/departments", getAllDepartments);
+
+// Get all users
+adminRouter.get("/users", getAllUsers);
+
+// Add Service
+adminRouter.post("/services/add", addService);
+
+// Edit service
+adminRouter.get("/services/:id/edit", getEditService);
+adminRouter.post("/services/:id/edit", editService);
+
+// Delete service
+adminRouter.post("/services/:id/delete", deleteService);
 
 /* ----------------------------- Admin ROUTES -------------------------- */
 

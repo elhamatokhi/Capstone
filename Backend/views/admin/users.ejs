@@ -1,0 +1,54 @@
+<%- include("../partials/header", { title: "Users" }) %> <%-
+include("../partials/navbar-admin") %>
+
+<div class="max-w-7xl mx-auto p-6">
+  <h1 class="text-2xl font-bold mb-6">Users</h1>
+
+  <% if (!users || users.length === 0) { %>
+  <p class="text-gray-600">No users found.</p>
+  <% } else { %>
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white shadow rounded-lg">
+      <thead class="bg-blue-600 text-white">
+        <tr>
+          <th class="px-4 py-2 text-left">ID</th>
+          <th class="px-4 py-2 text-left">Name</th>
+          <th class="px-4 py-2 text-left">Email</th>
+          <th class="px-4 py-2 text-left">Role</th>
+          <th class="px-4 py-2 text-left">Date of Birth</th>
+          <th class="px-4 py-2 text-left">Gender</th>
+          <th class="px-4 py-2 text-left">National ID</th>
+          <th class="px-4 py-2 text-left">Department</th>
+          <th class="px-4 py-2 text-left">Created At</th>
+          <th class="px-4 py-2 text-left">Updated At</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% users.forEach(user => { %>
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2"><%= user.id %></td>
+          <td class="px-4 py-2"><%= user.name %></td>
+          <td class="px-4 py-2"><%= user.email %></td>
+          <td class="px-4 py-2 capitalize"><%= user.role %></td>
+          <td class="px-4 py-2">
+            <%= user.date_of_birth ? new
+            Date(user.date_of_birth).toLocaleDateString() : "-" %>
+          </td>
+          <td class="px-4 py-2"><%= user.gender || "-" %></td>
+          <td class="px-4 py-2"><%= user.national_id || "-" %></td>
+          <td class="px-4 py-2"><%= user.department_name || "-" %></td>
+          <td class="px-4 py-2">
+            <%= new Date(user.created_at).toLocaleString() %>
+          </td>
+          <td class="px-4 py-2">
+            <%= new Date(user.updated_at).toLocaleString() %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<%- include("../partials/footer") %>
