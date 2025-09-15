@@ -8,6 +8,11 @@ import {
   editService,
   getAllUsers,
   getEditService,
+  getAllStaff,
+  addStaff,
+  getEditStaff,
+  editStaff,
+  deleteStaff,
 } from "../controllers/dashboard/adminDashboard.js";
 import {
   fetchRequests,
@@ -48,8 +53,19 @@ adminRouter.post("/services/:id/delete", deleteService);
 // Assign head
 adminRouter.post("/departments/:id/head", assignDepartmentHead);
 
+// Get all staff
+adminRouter.get("/staff", getAllStaff);
 //
 adminRouter.post("/admin/staff/:id/department", assignStaffDepartment);
-/* ----------------------------- Admin ROUTES -------------------------- */
+
+/* ----------------------------- STAFF ROUTES -------------------------- */
+// Add staff
+adminRouter.post("/staff/add", addStaff);
+// Edit staff
+adminRouter.get("/staff/:id/edit", getEditStaff);
+adminRouter.post("/staff/:id/edit", editStaff);
+
+// DELETE Staff
+adminRouter.post("/staff/:id/delete", deleteStaff);
 
 export default adminRouter;

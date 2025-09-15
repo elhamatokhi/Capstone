@@ -207,7 +207,7 @@ export const deleteService = async (req, res) => {
   }
 };
 
-// POST /admin/departments/:id/head
+// POST /admin/departments/:id/head  Assign department head
 export const assignDepartmentHead = async (req, res) => {
   const departmentId = req.params.id;
   const { staffId } = req.body;
@@ -234,7 +234,7 @@ export const assignDepartmentHead = async (req, res) => {
   }
 };
 
-// POST /admin/staff/:id/department
+// POST /admin/staff/:id/department Assign staff to departments
 export const assignStaffDepartment = async (req, res) => {
   const staffId = req.params.id;
   const { departmentId } = req.body;
@@ -250,6 +250,86 @@ export const assignStaffDepartment = async (req, res) => {
   } catch (err) {
     console.error("Error assigning staff to department:", err);
     req.flash("error_msg", "Failed to assign staff.");
+    res.redirect("/admin/staff");
+  }
+};
+
+// Get all Staff
+export const getAllStaff = async (req, res) => {
+  const results = await pool.query(`SELECT * FROM users WHERE role = 'staff'`);
+
+  const staff = results.rows;
+  res.render("admin/staff", { staff });
+};
+
+// Add staff
+
+export const addStaff = async (req, res) => {
+  try {
+    const { name, email, password, role, department_id } = req.body;
+    await pool.query(
+      ` INSERT INTO users (name, email, password, role, department_id)
+      VALUES ($1,$2,$3,$4,$5)
+      `,
+      [name, email, password, role, department_id]
+    );
+    req.flash("success_msg", "New staff added successfully!");
+    res.redirect("/admin/staff");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error adding staff.");
+  }
+};
+
+// GET EDIT
+export const getEditStaff = async (req, res) => {
+  const staff_id = req.params.id;
+  const result = await pool.query(`SELECT * FROM users WHERE id = $1 `, [
+    staff_id,
+  ]);
+
+  if (result.rows.length === 0) {
+    req.flash("error_msg", "Staff not found");
+    return res.redirect("/admin/staff");
+  }
+
+  const staff = result.rows[0];
+  res.render("admin/editStaff", {
+    staff,
+  });
+};
+
+// Edit staff
+export const editStaff = async (req, res) => {
+  try {
+    const { name, email, password, role, department_id } = req.body;
+    const staff_id = req.params.id;
+    await pool.query(
+      `UPDATE users
+      SET name = $1, email = $2, password = $3, role = $4, department_id = $5
+      WHERE id = $6
+      RETURNING *
+      `,
+      [name, email, password, role, department_id, staff_id]
+    );
+    req.flash("success_msg", "Staff updated successfully!");
+    res.redirect("/admin/staff");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error updating staff.");
+  }
+};
+// Delete Staff
+export const deleteStaff = async (req, res) => {
+  try {
+    const staff_id = req.params.id;
+    await pool.query(`DELETE FROM users WHERE id = $1`, [staff_id]);
+
+    req.flash("success_msg", "staff removed successfully!");
+    res.redirect("/admin/staff");
+  } catch (err) {
+    console.error("Error updating staff:", err);
+    req.flash("error_msg", "Failed to update staff.");
     res.redirect("/admin/staff");
   }
 };

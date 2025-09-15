@@ -21,6 +21,7 @@ include("../partials/navbar-admin") %>
           <th class="px-4 py-2 text-left">Department</th>
           <th class="px-4 py-2 text-left">Created At</th>
           <th class="px-4 py-2 text-left">Updated At</th>
+          <th class="px-4 py-2 text-left">Action</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
@@ -42,6 +43,11 @@ include("../partials/navbar-admin") %>
           </td>
           <td class="px-4 py-2">
             <%= new Date(user.updated_at).toLocaleString() %>
+          </td>
+          <td class="px-4 py-2">
+            <form action="/admin/staff/:id/department">
+              <button type="submit"></button>
+            </form>
           </td>
         </tr>
         <% }) %>
