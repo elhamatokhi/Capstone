@@ -64,10 +64,15 @@ router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
+    const role = req.user.role;
     console.log("Google login successful, user:", req.user);
-    res.redirect("/dashboard"); // this must run
+    res.redirect(`/${role}/dashboard`);
   }
 );
+
+router.get("/dashboard", (req, res) => {
+  res.redirect("/login");
+});
 
 // About page
 router.get(`/about`, getAbout);

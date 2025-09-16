@@ -331,25 +331,6 @@ export const getAllStaff = async (req, res) => {
   res.render("admin/staff", { staff });
 };
 
-// Add staff
-
-export const addStaff = async (req, res) => {
-  try {
-    const { name, email, password, role, department_id } = req.body;
-    await pool.query(
-      ` INSERT INTO users (name, email, password, role, department_id)
-      VALUES ($1,$2,$3,$4,$5)
-      `,
-      [name, email, password, role, department_id]
-    );
-    req.flash("success_msg", "New staff added successfully!");
-    res.redirect("/admin/staff");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error adding staff.");
-  }
-};
-
 // GET EDIT
 export const getEditStaff = async (req, res) => {
   const staff_id = req.params.id;

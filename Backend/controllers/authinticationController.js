@@ -47,18 +47,13 @@ export const loginUser = (req, res, next) => {
       return res.status(500).json({ message: "Internal server error" });
     }
 
-    if (!user)
-      return res
-        .status(401)
-        .json({ message: info?.message || "Invalid credentials" });
-
+    if (!user) {
+      req.flash("error_msg", "Invalid email or password.");
+      return res.redirect("/login");
+    }
     req.logIn(user, (err) => {
       if (err) return res.status(500).json({ message: "Login failed" });
 
-      // return res.json({
-      //   message: "Login successful",
-      //   user: { id: user.id, name: user.name },
-      // });
       const role = req.user.role;
       return res.redirect(`/${role}/dashboard`);
     });

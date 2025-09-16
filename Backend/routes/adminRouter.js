@@ -9,7 +9,6 @@ import {
   getAllUsers,
   getEditService,
   getAllStaff,
-  addStaff,
   getEditStaff,
   editStaff,
   deleteStaff,
@@ -59,8 +58,6 @@ adminRouter.get("/staff", getAllStaff);
 adminRouter.post("/admin/staff/:id/department", assignStaffDepartment);
 
 /* ----------------------------- STAFF ROUTES -------------------------- */
-// Add staff
-adminRouter.post("/staff/add", addStaff);
 // Edit staff
 adminRouter.get("/staff/:id/edit", getEditStaff);
 adminRouter.post("/staff/:id/edit", editStaff);
