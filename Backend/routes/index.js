@@ -18,7 +18,6 @@ import {
   getProfile,
   updateProfile,
 } from "../controllers/profilesController.js";
-import { fetchNotifications } from "../controllers/requestContoller.js";
 import passport from "passport";
 
 const router = Router();

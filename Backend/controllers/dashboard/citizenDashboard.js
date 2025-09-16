@@ -5,9 +5,9 @@ import { fetchNotifications } from "../requestContoller.js";
 // Dashboard
 export const getDashboard = async (req, res) => {
   try {
-    // Fetch notifications for logged-in user
-    const notifications = await fetchNotifications(req.user.id);
+    // Fetch notifications
 
+    const notifications = await fetchNotifications(req.user.id);
     const unreadCount = notifications.filter((n) => !n.is_read).length;
 
     res.render(`citizen/dashboard`, {
