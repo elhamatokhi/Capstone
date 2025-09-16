@@ -35,19 +35,6 @@ export const changeRequestStatus = async (req, res) => {
       [updatedRequest.user_id, message]
     );
 
-    // Get the user’s email
-    const userResult = await pool.query(
-      "SELECT email FROM users WHERE id = $1",
-      [updatedRequest.user_id]
-    );
-    const userEmail = userResult.rows[0].email;
-
-    // await sendEmail({
-    //   to: userEmail,
-    //   subject: "Request status update",
-    //   text: `Your request #${requestId} status changed to: ${status}`,
-    //   html: `<p>Your request #${requestId} status changed to: ${status}</p>`,
-    // });
     req.flash("success_msg", `Request ${status} successfully.`);
     res.redirect(`/${req.user.role}/requests/`);
   } catch (error) {

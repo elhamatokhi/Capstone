@@ -2,44 +2,63 @@
 include('../partials/navbar-admin') %>
 
 <!-- Search and Filter Form -->
-<div class="max-w-6xl mx-auto p-6 mb-4 bg-white shadow rounded-lg">
-  <label for="form">
-    Seach and Filter
-    <form action="/admin/requests" method="GET" class="search-form">
-      <input type="text" name="name" placeholder="Service Name" />
-      <input type="text" name="requestId" placeholder="Request ID" />
+<div class="max-w-8xl mx-auto p-6 mb-4 mt-2 bg-white shadow rounded-lg">
 
-      <select name="status">
-        <option value="">-- Status --</option>
-        <option value="pending">Pending</option>
-        <option value="approved">Approved</option>
-        <option value="rejected">Rejected</option>
-      </select>
+    <form action="/admin/requests" method="GET" class="search-form flex items-center space-x-2">
+  <!-- Existing inputs -->
+  <input
+    type="text"
+    name="requestId"
+    placeholder="Request ID"
+    value="<%= filters.requestId || '' %>"
+  />
 
-      <select name="serviceType">
-        <option value="">-- Service Type --</option>
-        <option value="type1">Type 1</option>
-        <option value="type2">Type 2</option>
-        <!-- Add real types -->
-      </select>
+  <input
+    type="text"
+    name="username"
+    placeholder="Citizen Name"
+    value="<%= filters.username || '' %>"
+  />
 
-      <label>Date Range:</label>
-      <input type="date" name="startDate" />
-      <input type="date" name="endDate" />
+  <select name="status">
+    <option value="">-- Status --</option>
+    <option value="under_review" <%= filters.status === 'under_review' ? 'selected' : '' %>>Under Review</option>
+    <option value="approved" <%= filters.status === 'approved' ? 'selected' : '' %>>Approved</option>
+    <option value="rejected" <%= filters.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+  </select>
 
-      <button type="submit">Search</button>
-    </form>
-  </label>
+  <select name="service_id">
+    <option value="">-- Service --</option>
+    <% services.forEach(service => { %>
+      <option value="<%= service.id %>" <%= filters.service_id == service.id ? 'selected' : '' %>><%= service.name %></option>
+    <% }) %>
+  </select>
+
+  <label for="startDate">From:</label>
+  <input type="date" name="startDate" value="<%= filters.startDate || '' %>" />
+
+  <label for="endDate">To:</label>
+  <input type="date" name="endDate" value="<%= filters.endDate || '' %>" />
+
+  <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Search</button>
+  
+  <!-- Clear button -->
+  <a href="/admin/requests" class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">Clear</a>
+</form>
 </div>
 <!-- Requests Table -->
 <div class="bg-white shadow rounded-lg p-4">
   <h3 class="font-semibold mb-2">All requests</h3>
+
+  <% if (requests.length > 0) { %>
   <table class="w-full text-left">
     <thead>
       <tr>
         <th class="px-2 py-1">Request ID</th>
         <th class="px-2 py-1">Status</th>
+        <th class="px-2 py-1">Citizen name</th>
         <th class="px-2 py-1">Department ID</th>
+        <th class="px-2 py-1">Service Name</th>
         <th class="px-2 py-1">Create at</th>
         <th class="px-2 py-1">Actions</th>
       </tr>
@@ -49,7 +68,9 @@ include('../partials/navbar-admin') %>
       <tr>
         <td class="px-2 py-1"><%= request.id %></td>
         <td class="px-2 py-1"><%= request.status %></td>
+        <td class="px-2 py-1"><%= request.citizen_name %></td>
         <td class="px-2 py-1"><%= request.department_id %></td>
+        <td class="px-2 py-1"><%= request.service_name %></td>
         <td class="px-2 py-1"><%= request.created_at %></td>
         <td class="py-3 px-4">
           <a
@@ -62,6 +83,9 @@ include('../partials/navbar-admin') %>
       <% }) %>
     </tbody>
   </table>
+  <% } else { %>
+  <p class="text-gray-500 mt-4">No requests matched your search.</p>
+  <% } %>
 </div>
 
 <%- include('../partials/footer') %>

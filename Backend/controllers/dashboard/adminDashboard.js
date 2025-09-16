@@ -1,4 +1,5 @@
 import pool from "../../config/db.js";
+import { db } from "../../config/knex.js";
 
 // Fetch all requests
 export const fetchRequests = async () => {
@@ -31,9 +32,46 @@ export const adminDashboard = async (req, res) => {
 
 // getAll requests
 export const getAllRequests = async (req, res) => {
-  const requests = await fetchRequests();
-  console.log(requests);
-  res.render("admin/requests", { requests });
+  const role = req.user.role;
+  const { requestId, status, username, service_name, startDate, endDate } =
+    req.query;
+
+  try {
+    let query = db("requests as r")
+      .select(
+        "r.id",
+        "r.status",
+        "r.comments",
+        "s.name as service_name",
+        "s.id as service_id",
+        "s.department_id as department_id",
+        "user.name as citizen_name",
+        db.raw("to_char(r.created_at, 'YYYY-MM-DD HH24:MI') as created_at")
+      )
+      .join("services as s", "r.service_id", "s.id")
+      .join("users as user", "r.user_id", "user.id");
+
+    const services = await db("services").select("id", "name");
+    if (requestId) query = query.where("r.id", requestId);
+    if (status) query = query.where("r.status", status);
+    if (username) query.whereILike("user.name", `%${username}%`);
+    if (service_name) query.whereILike("s.name", `%${service_name.trim()}%`);
+
+    if (startDate && endDate)
+      query = query.whereBetween("r.created_at", [startDate, endDate]);
+
+    const requests = await query;
+
+    res.render("admin/requests", {
+      requests,
+      filters: req.query,
+      services,
+    });
+  } catch (error) {
+    console.error("Error loading requests:", error);
+    req.flash("error_msg", "Failed to load requests.");
+    res.redirect(`/${role}/dashboard`);
+  }
 };
 // getAll requests
 export const getAllServices = async (req, res) => {
