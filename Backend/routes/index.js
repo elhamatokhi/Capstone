@@ -70,7 +70,7 @@ router.get(
   }
 );
 
-router.get("/dashboard", (req, res) => {
+router.get("/", (req, res) => {
   res.redirect("/login");
 });
 
