@@ -1,143 +1,163 @@
 <%- include('../partials/header', { title: "Department Head Dashboard" }) %> <%-
-include('../partials/navbar-department_head') %> <% if (success_msg &&
-success_msg.length > 0) { %>
-<div
-  id="flash-success"
-  class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md mb-4"
->
-  <%= success_msg[0] %>
-</div>
-<% } %> <% if (error_msg && error_msg.length > 0) { %>
-<div
-  id="flash-error"
-  class="bg-red-100 text-red-800 px-4 py-2 rounded-lg shadow-md mb-4"
->
-  <%= error_msg[0] %>
-</div>
+include('../partials/navbar-department_head') %> <!-- Flash messages -->
+<% if (success_msg && success_msg.length > 0) { %>
+  <div
+    id="flash-success"
+    class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md mb-4 transition-all duration-500"
+  >
+    <%= success_msg[0] %>
+  </div>
 <% } %>
+
+<% if (error_msg && error_msg.length > 0) { %>
+  <div
+    id="flash-error"
+    class="bg-red-100 text-red-800 px-4 py-2 rounded-lg shadow-md mb-4 transition-all duration-500"
+  >
+    <%= error_msg[0] %>
+  </div>
+<% } %>
+
 <script>
-  setTimeout(function () {
+  setTimeout(() => {
     const flash = document.getElementById("flash-success");
     const failFlash = document.getElementById("flash-error");
-    if (failFlash) failFlash.style.display = "none";
-    if (flash) flash.style.display = "none";
-  }, 2000);
+    if (flash) flash.classList.add("opacity-0", "transition-opacity", "duration-500");
+    if (failFlash) failFlash.classList.add("opacity-0", "transition-opacity", "duration-500");
+  }, 3000);
 </script>
 
+<!-- Page wrapper -->
 <div class="max-w-6xl mx-auto p-6">
+
   <h2 class="text-2xl font-bold mb-6">Requests for Your Department</h2>
 
-  <!-- Search and Filter Form -->
-  <div class="max-w-6xl mx-auto p-6 mb-4 bg-white shadow rounded-lg">
-    <h3 class="font-semibold mb-2">Search and Filter</h3>
-    <form action="/department_head/requests" method="GET" class="search-form">
+  <!-- Search & Filter Form -->
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <h3 class="font-semibold mb-4 text-lg">Search and Filter</h3>
+    <form action="/department_head/requests" method="GET" class="flex flex-wrap gap-3 items-end">
 
       <input
         type="text"
         name="requestId"
         placeholder="Request ID"
         value="<%= filters.requestId || '' %>"
+        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
-      <select name="status">
+      <select name="status" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
         <option value="">-- Status --</option>
         <option value="under_review" <%= filters.status === 'under_review' ? 'selected' : '' %>>Under Review</option>
         <option value="approved" <%= filters.status === 'approved' ? 'selected' : '' %>>Approved</option>
         <option value="rejected" <%= filters.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
       </select>
 
-      <label for="startDate">From: </label>
-      <input
-        type="date"
-        name="startDate"
-        value="<%= filters.startDate || '' %>"
-      />
-      <label for="endDate">To: </label>
-      <input
-        type="date"
-        name="endDate"
-        value="<%= filters.endDate || '' %>"
-      />
+      <div class="flex items-center gap-2">
+        <label for="startDate">From:</label>
+        <input
+          type="date"
+          name="startDate"
+          value="<%= filters.startDate || '' %>"
+          class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-      <button type="submit">Search</button>
-        <a href="/department_head/requests" class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">Clear</a>
+      <div class="flex items-center gap-2">
+        <label for="endDate">To:</label>
+        <input
+          type="date"
+          name="endDate"
+          value="<%= filters.endDate || '' %>"
+          class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+        Search
+      </button>
+
+      <a href="/department_head/requests" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 transition-colors">
+        Clear
+      </a>
+
     </form>
   </div>
 
-
+  <!-- Requests Table -->
   <% if (requests && requests.length > 0) { %>
-  <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="py-3 px-4 text-left">Request ID</th>
-        <th class="py-3 px-4 text-left">Citizen</th>
-        <th class="py-3 px-4 text-left">Service</th>
-        <th class="py-3 px-4 text-left">Status</th>
-        <th class="py-3 px-4 text-left">Comments</th>
-          <th class="py-3 px-4 text-left">Created At</th>
-        <th class="py-3 px-4 text-left">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% requests.forEach(r => { %>
-      <tr class="border-b hover:bg-gray-50">
-        <td class="py-3 px-4"><%= r.id %></td>
-        <td class="py-3 px-4"><%= r.citizen_name %></td>
-        <td class="py-3 px-4"><%= r.service_name %></td>
-        <td class="py-3 px-4">
-          <span
-            class="px-2 py-1 rounded text-sm <%= r.status === 'submitted' ? 'bg-yellow-100 text-yellow-700' : '' %> <%= r.status === 'approved' ? 'bg-green-100 text-green-700' : '' %> <%= r.status === 'rejected' ? 'bg-red-100 text-red-700' : '' %> <%= r.status === 'under_review' ? 'bg-blue-100 text-blue-700' : '' %>"
-          >
-            <%= r.status %>
-          </span>
-        </td>
-        <td class="py-3 px-4"><%= r.comments || '—' %></td>
-        <td class="py-3 px-4"><%= r.created_at %></td>
+  <div class="overflow-x-auto bg-white shadow rounded-lg">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Request ID</th>
+          <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Citizen</th>
+          <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Service</th>
+          <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Status</th>
+          <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Comments</th>
+          <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Created At</th>
+          <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% requests.forEach(r => { %>
+        <tr class="hover:bg-gray-50">
+          <td class="py-3 px-4"><%= r.id %></td>
+          <td class="py-3 px-4"><%= r.citizen_name %></td>
+          <td class="py-3 px-4"><%= r.service_name %></td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-1 rounded text-sm
+              <%= r.status === 'submitted' ? 'bg-yellow-100 text-yellow-700' : '' %>
+              <%= r.status === 'approved' ? 'bg-green-100 text-green-700' : '' %>
+              <%= r.status === 'rejected' ? 'bg-red-100 text-red-700' : '' %>
+              <%= r.status === 'under_review' ? 'bg-blue-100 text-blue-700' : '' %>">
+              <%= r.status %>
+            </span>
+          </td>
+          <td class="py-3 px-4"><%= r.comments || '—' %></td>
+          <td class="py-3 px-4"><%= r.created_at %></td>
+          <td class="py-3 px-4 space-y-2">
+            <!-- Status Update -->
+            <form action="/requests/<%= r.id %>/status" method="POST" class="flex items-center gap-2">
+              <select
+                name="status"
+                required
+                class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="approved">Approve</option>
+                <option value="rejected">Reject</option>
+                <option value="under_review">Set under review</option>
+              </select>
+              <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+                Update
+              </button>
+            </form>
 
-        <td class="px-2 py-1">
-          <% if(r.status) { %>
-
-         <section class="flex flex-wrap gap-4">
-          <form action="/requests/<%= r.id %>/status" method="POST">
-            <select name="status" required>
-              <option value="approved">Approve</option>
-              <option value="rejected">Reject</option>
-              <option value="under_review">Set under review</option>
-            </select>
-            <button type="submit">Update</button>
-          </form>
-        </section>
-          <form action="/department_head/assign" method="POST" class="inline">
-            <input type="hidden" name="requestId" value="<%= r.id %>" />
-
-            <br />
-            <br />
-            <label for="select">Choose staff</label>
-            <select name="staffId" class="border px-2 py-1 rounded text-sm">
-              <% staff.forEach(s => { %>
-              <option value="<%= s.id %>"><%= s.name %></option>
-              <% }) %>
-            </select>
-            <input
-              type="text"
-              name="notes"
-              placeholder="Add notes to..."
-              class="border px-2 py-1 rounded text-sm w-64"
-            />
-            <button class="bg-blue-500 text-white px-2 py-1 rounded ml-1">
-              Assign
-            </button>
-          </form>
-          <% } else { %>
-          <span class="text-gray-500">No actions</span>
-          <% } %>
-        </td>
-      </tr>
-      <% }) %>
-    </tbody>
-  </table>
+            <!-- Assign Staff -->
+            <form action="/department_head/assign" method="POST" class="flex flex-wrap items-center gap-2">
+              <input type="hidden" name="requestId" value="<%= r.id %>" />
+              <select name="staffId" class="border px-2 py-1 rounded text-sm">
+                <% staff.forEach(s => { %>
+                <option value="<%= s.id %>"><%= s.name %></option>
+                <% }) %>
+              </select>
+              <input
+                type="text"
+                name="notes"
+                placeholder="Add notes..."
+                class="border px-2 py-1 rounded text-sm flex-1"
+              />
+              <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition-colors">
+                Assign
+              </button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
   <% } else { %>
-  <p class="text-gray-600">No requests found for your department.</p>
+    <p class="text-gray-600 mt-4">No requests found for your department.</p>
   <% } %>
 </div>
 

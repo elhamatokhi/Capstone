@@ -65,8 +65,7 @@ export const fetchRequestDetails = async (requestId) => {
   );
 
   if (result.rows.length === 0) {
-    req.flash("error_msg", "Request not found.");
-    return res.redirect("/request/:id");
+    return null;
   }
   return {
     request: result.rows[0],

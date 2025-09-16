@@ -78,13 +78,20 @@ include(navbarPartial) %> <% if (success_msg && success_msg.length > 0) { %>
     <% if (documents && documents.length > 0) { %>
     <ul class="list-disc ml-6 space-y-1">
       <% documents.forEach(doc => { %>
-      <li>
+      <li class="flex justify-between items-center">
         <a
-          href="/uploads/<%= doc.file_path %>"
+          href="/<%= doc.file_path %>"
           target="_blank"
           class="text-blue-600 hover:underline"
         >
           <%= doc.file_type %>
+        </a>
+        <a
+          href="/<%= doc.file_path %>"
+          download
+          class="text-green-600 hover:underline"
+        >
+          Download
         </a>
       </li>
       <% }) %>
@@ -93,16 +100,28 @@ include(navbarPartial) %> <% if (success_msg && success_msg.length > 0) { %>
     <p class="text-gray-500">No documents submitted.</p>
     <% } %>
   </section>
-
   <!-- Actions -->
-  <section class="flex flex-wrap gap-4">
-    <form action="/requests/<%= request.id %>/status" method="POST">
-      <select name="status" required>
+  <section class="flex flex-wrap items-center gap-4 mt-4">
+    <form
+      action="/requests/<%= request.id %>/status"
+      method="POST"
+      class="flex items-center gap-2"
+    >
+      <select
+        name="status"
+        required
+        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
         <option value="approved">Approve</option>
         <option value="rejected">Reject</option>
         <option value="under_review">Set under review</option>
       </select>
-      <button type="submit">Update</button>
+      <button
+        type="submit"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+      >
+        Update
+      </button>
     </form>
   </section>
 </div>

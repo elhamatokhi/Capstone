@@ -127,7 +127,7 @@ export const submitRequest = async (req, res) => {
         await pool.query(
           `INSERT INTO documents (request_id, file_path, file_type, uploaded_at)
            VALUES ($1, $2, $3, NOW())`,
-          [requestId, file.path, fileType]
+          [requestId, `uploads/${file.filename}`, fileType]
         );
       }
     }
