@@ -4,7 +4,7 @@ import { getDashboard } from "../controllers/dashboard/citizenDashboard.js";
 import {
   addService,
   adminDashboard,
-  deleteService,
+  changeStatus,
   editService,
   getAllUsers,
   getEditService,
@@ -48,7 +48,7 @@ adminRouter.get("/services/:id/edit", getEditService);
 adminRouter.post("/services/:id/edit", editService);
 
 // Delete service
-adminRouter.post("/services/:id/delete", deleteService);
+adminRouter.post("/services/:id/status", changeStatus);
 
 // Assign head
 adminRouter.post("/departments/:id/head", assignDepartmentHead);

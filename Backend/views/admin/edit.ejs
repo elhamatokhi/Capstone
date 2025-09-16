@@ -35,11 +35,14 @@ include("../partials/navbar-admin") %>
       />
     </div>
 
-    <!-- Hidden department_id -->
+    <!-- department_id -->
+    <label for="fee" class="block font-semibold mb-1">Department ID</label>
     <input
-      type="hidden"
+      type="number"
       name="department_id"
       value="<%= service.department_id %>"
+      class="w-full border rounded px-3 py-2"
+      required
     />
 
     <!-- Buttons -->
@@ -50,9 +53,7 @@ include("../partials/navbar-admin") %>
       >
         Save Changes
       </button>
-      <a href="/admin/departments" class="text-gray-600 hover:underline"
-        >Cancel</a
-      >
+      <a href="/admin/services" class="text-gray-600 hover:underline">Cancel</a>
     </div>
   </form>
 </div>

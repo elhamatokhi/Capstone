@@ -1,6 +1,36 @@
 <%- include('../partials/header', { title: "Admin Dashboard" }) %> <%-
 include('../partials/navbar-admin') %>
 
+<!-- Search and Filter Form -->
+<div class="max-w-6xl mx-auto p-6 mb-4 bg-white shadow rounded-lg">
+  <label for="form">
+    Seach and Filter
+    <form action="/admin/requests" method="GET" class="search-form">
+      <input type="text" name="name" placeholder="Service Name" />
+      <input type="text" name="requestId" placeholder="Request ID" />
+
+      <select name="status">
+        <option value="">-- Status --</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+
+      <select name="serviceType">
+        <option value="">-- Service Type --</option>
+        <option value="type1">Type 1</option>
+        <option value="type2">Type 2</option>
+        <!-- Add real types -->
+      </select>
+
+      <label>Date Range:</label>
+      <input type="date" name="startDate" />
+      <input type="date" name="endDate" />
+
+      <button type="submit">Search</button>
+    </form>
+  </label>
+</div>
 <!-- Requests Table -->
 <div class="bg-white shadow rounded-lg p-4">
   <h3 class="font-semibold mb-2">All requests</h3>
@@ -9,6 +39,7 @@ include('../partials/navbar-admin') %>
       <tr>
         <th class="px-2 py-1">Request ID</th>
         <th class="px-2 py-1">Status</th>
+        <th class="px-2 py-1">Department ID</th>
         <th class="px-2 py-1">Create at</th>
         <th class="px-2 py-1">Actions</th>
       </tr>
@@ -18,6 +49,7 @@ include('../partials/navbar-admin') %>
       <tr>
         <td class="px-2 py-1"><%= request.id %></td>
         <td class="px-2 py-1"><%= request.status %></td>
+        <td class="px-2 py-1"><%= request.department_id %></td>
         <td class="px-2 py-1"><%= request.created_at %></td>
         <td class="py-3 px-4">
           <a

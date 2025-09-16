@@ -29,34 +29,41 @@ success_msg.length > 0) { %>
 
   <!-- Search and Filter Form -->
   <div class="max-w-6xl mx-auto p-6 mb-4 bg-white shadow rounded-lg">
-    <label for="form">
-      Seach and Filter
-      <form action="/requests/search" method="GET" class="search-form">
-        <input type="text" name="name" placeholder="Name" />
-        <input type="text" name="requestId" placeholder="Request ID" />
+    <h3 class="font-semibold mb-2">Search and Filter</h3>
+    <form action="/department_head/requests" method="GET" class="search-form">
 
-        <select name="status">
-          <option value="">-- Status --</option>
-          <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
-        </select>
+      <input
+        type="text"
+        name="requestId"
+        placeholder="Request ID"
+        value="<%= filters.requestId || '' %>"
+      />
 
-        <select name="serviceType">
-          <option value="">-- Service Type --</option>
-          <option value="type1">Type 1</option>
-          <option value="type2">Type 2</option>
-          <!-- Add real types -->
-        </select>
+      <select name="status">
+        <option value="">-- Status --</option>
+        <option value="under_review" <%= filters.status === 'under_review' ? 'selected' : '' %>>Under Review</option>
+        <option value="approved" <%= filters.status === 'approved' ? 'selected' : '' %>>Approved</option>
+        <option value="rejected" <%= filters.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+      </select>
 
-        <label>Date Range:</label>
-        <input type="date" name="startDate" />
-        <input type="date" name="endDate" />
+      <label for="startDate">From: </label>
+      <input
+        type="date"
+        name="startDate"
+        value="<%= filters.startDate || '' %>"
+      />
+      <label for="endDate">To: </label>
+      <input
+        type="date"
+        name="endDate"
+        value="<%= filters.endDate || '' %>"
+      />
 
-        <button type="submit">Search</button>
-      </form>
-    </label>
+      <button type="submit">Search</button>
+    </form>
   </div>
+
+
   <% if (requests && requests.length > 0) { %>
   <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
     <thead class="bg-gray-100">
@@ -66,6 +73,7 @@ success_msg.length > 0) { %>
         <th class="py-3 px-4 text-left">Service</th>
         <th class="py-3 px-4 text-left">Status</th>
         <th class="py-3 px-4 text-left">Comments</th>
+          <th class="py-3 px-4 text-left">Created At</th>
         <th class="py-3 px-4 text-left">Actions</th>
       </tr>
     </thead>
@@ -83,25 +91,21 @@ success_msg.length > 0) { %>
           </span>
         </td>
         <td class="py-3 px-4"><%= r.comments || '—' %></td>
+        <td class="py-3 px-4"><%= r.created_at %></td>
 
         <td class="px-2 py-1">
-          <% if(r.status === 'submitted') { %>
+          <% if(r.status) { %>
 
-          <form
-            action="/staff/approve/<%= r.id %>"
-            method="POST"
-            class="inline"
-          >
-            <button class="bg-green-500 text-white px-2 py-1 rounded">
-              Approve
-            </button>
+         <section class="flex flex-wrap gap-4">
+          <form action="/requests/<%= r.id %>/status" method="POST">
+            <select name="status" required>
+              <option value="approved">Approve</option>
+              <option value="rejected">Reject</option>
+              <option value="under_review">Set under review</option>
+            </select>
+            <button type="submit">Update</button>
           </form>
-          <form action="/staff/reject/<%= r.id %>" method="POST" class="inline">
-            <button class="bg-red-500 text-white px-2 py-1 rounded">
-              Reject
-            </button>
-          </form>
-
+        </section>
           <form action="/department_head/assign" method="POST" class="inline">
             <input type="hidden" name="requestId" value="<%= r.id %>" />
 

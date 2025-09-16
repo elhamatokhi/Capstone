@@ -1,5 +1,5 @@
 import pool from "../../config/db.js";
-
+import { db } from "../../config/knex.js";
 //  fetch requests for a specific department
 export const fetchRequestsByDepartment = async (departmentId) => {
   const result = await pool.query(
@@ -44,18 +44,37 @@ export const getAllStaff = async (req, res) => {
 export const getRequestsPage = async (req, res) => {
   const departmentId = req.user.department_id;
   const role = req.user.role;
-
+  const { requestId, status, startDate, endDate } = req.query;
   try {
-    const requests = await fetchRequestsByDepartment(departmentId);
+    let query = db("requests as r")
+      .select(
+        "r.id",
+        "r.status",
+        "r.comments",
+        "s.name as service_name",
+        "s.fee as service_fee",
+        "s.id as service_id",
+        db.raw("to_char(r.created_at, 'YYYY-MM-DD HH24:MI') as created_at")
+      )
+      .join("services as s", "r.service_id", "s.id")
+      .where("s.department_id", departmentId);
 
-    // 🆕 Fetch staff too
-    const staffResult = await pool.query(
-      `SELECT id, name FROM users WHERE role = 'staff' AND department_id = $1`,
-      [departmentId]
-    );
-    const staff = staffResult.rows;
+    // Fetch staff too - assign request
+    const staff = await db("users")
+      .select("id", "name")
+      .where({ role: "staff", department_id: departmentId });
 
-    res.render("department_head/requests", { requests, staff });
+    if (requestId) query = query.where("r.id", requestId);
+    if (status) query = query.where("r.status", status);
+    if (startDate && endDate)
+      query = query.whereBetween("r.created_at", [startDate, endDate]);
+
+    const requests = await query;
+    res.render("department_head/requests", {
+      requests,
+      staff,
+      filters: req.query,
+    });
   } catch (error) {
     console.error("Error loading requests:", error);
     req.flash("error_msg", "Failed to load requests.");

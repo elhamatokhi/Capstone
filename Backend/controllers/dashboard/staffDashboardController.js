@@ -35,7 +35,7 @@ export const staffDashboard = async (req, res) => {
 // Route handler to get all requests assigned to staff
 export const getStaffRequest = async (req, res) => {
   const userId = req.user.id;
-  const { requestId, status, service_name, startDate, endDate } = req.query;
+  const { requestId, status, startDate, endDate } = req.query;
 
   try {
     let query = db("requests as r")
@@ -53,12 +53,10 @@ export const getStaffRequest = async (req, res) => {
 
     if (requestId) query = query.where("r.id", requestId);
     if (status) query = query.where("r.status", status);
-    if (service_name) query = query.whereILike("s.name", `%${service_name}%`);
     if (startDate && endDate)
       query = query.whereBetween("r.created_at", [startDate, endDate]);
 
     const filteredReqs = await query;
-
     res.render("staff/requests", {
       requests: filteredReqs,
       filters: req.query,

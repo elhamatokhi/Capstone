@@ -57,10 +57,6 @@ include(navbarPartial) %> <% if (success_msg && success_msg.length > 0) { %>
           <p class="font-semibold text-gray-700">National ID</p>
           <p class="text-gray-600"><%= user.national_id %></p>
         </div>
-        <div>
-          <p class="font-semibold text-gray-700">Gender</p>
-          <p class="text-gray-600"><%= user.gender || 'Not specified' %></p>
-        </div>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 import pool from "../../config/db.js";
-import { services } from "./citizenDashboard.js";
+
 // Fetch all requests
 export const fetchRequests = async () => {
   const result = await pool.query(
@@ -14,7 +14,9 @@ export const fetchRequests = async () => {
 };
 
 export const fetchServices = async () => {
-  const result = await pool.query(`SELECT * FROM services`);
+  const result = await pool.query(`SELECT * FROM services
+    ORDER BY services.is_active DESC
+    `);
   return result.rows;
 };
 
@@ -30,11 +32,13 @@ export const adminDashboard = async (req, res) => {
 // getAll requests
 export const getAllRequests = async (req, res) => {
   const requests = await fetchRequests();
+  console.log(requests);
   res.render("admin/requests", { requests });
 };
 // getAll requests
 export const getAllServices = async (req, res) => {
   const services = await fetchServices();
+  console.log(services);
   res.render("admin/services", { services });
 };
 
@@ -133,7 +137,7 @@ export const getAllDepartments = async (req, res) => {
   }
 };
 
-// CRUD Services
+/*---------------------------CRUD Services--------------------------------*/
 
 // Add Service
 export const addService = async (req, res) => {
@@ -145,7 +149,7 @@ export const addService = async (req, res) => {
       [department_id, name, fee]
     );
     req.flash("success_msg", "New service added successfully!");
-    res.redirect("/admin/departments");
+    res.redirect("/admin/services");
   } catch (err) {
     console.error("Error adding service:", err);
     res.status(500).send("Something went wrong");
@@ -161,7 +165,7 @@ export const getEditService = async (req, res) => {
 
   if (result.rows.length === 0) {
     req.flash("error_msg", "Service not found");
-    return res.redirect("/admin/departments");
+    return res.redirect("/admin/services");
   }
 
   const service = result.rows[0];
@@ -184,7 +188,7 @@ export const editService = async (req, res) => {
     );
 
     req.flash("success_msg", "Service edited successfully!");
-    res.redirect("/admin/departments");
+    res.redirect("/admin/services");
   } catch (error) {
     console.error("Error editing service: ", error);
     res.status(500).send("Something went wrong.");
@@ -192,17 +196,20 @@ export const editService = async (req, res) => {
 };
 
 // Delete a service
-export const deleteService = async (req, res) => {
+export const changeStatus = async (req, res) => {
   try {
     const serviceId = req.params.id;
     console.log(serviceId);
-    await pool.query(`UPDATE services SET is_active = FALSE WHERE id = $1`, [
-      serviceId,
-    ]);
-    req.flash("success_msg", "Service deleted successfully.");
-    res.redirect("/admin/departments");
+    await pool.query(
+      `UPDATE services
+       SET is_active = NOT is_active 
+      WHERE id = $1`,
+      [serviceId]
+    );
+    req.flash("success_msg", "Service status updated successfully.");
+    res.redirect("/admin/services");
   } catch (error) {
-    console.error("Error deleting service: ", error);
+    console.error("Error changing status of the service: ", error);
     res.status(500).send("Something went wrong.");
   }
 };

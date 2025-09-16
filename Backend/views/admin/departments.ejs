@@ -28,7 +28,7 @@ include("../partials/navbar-admin") %> <% if (success_msg && success_msg.length
         class="w-full flex justify-between items-center p-4 bg-blue-600 text-white font-semibold focus:outline-none"
         onclick="toggleDetails('<%= d.id %>')"
       >
-        <span><%= d.name %></span>
+        <span><%= d.name %></span> <span>ID: <%= d.id %></span>
         <svg
           id="icon-<%= d.id %>"
           class="w-5 h-5 transform transition-transform"
@@ -47,16 +47,16 @@ include("../partials/navbar-admin") %> <% if (success_msg && success_msg.length
 
       <!-- Department details (hidden by default) -->
       <div id="details-<%= d.id %>" class="hidden p-4 space-y-4">
-        <!-- Department Head -->
+        
+           <!-- Department Head -->
         <div>
           <h3 class="text-lg font-semibold mb-2">Department Head</h3>
-          <% if (d.head) { %>
-          <p class="text-gray-700"><%= d.head.name %> (<%= d.head.email %>)</p>
-          <% } else { %>
-          <p class="text-gray-500">No department head assigned.</p>
-          <% } %>
-        </div>
-        
+          <% const head = d.staff.find(st => st.role === 'department_head'); %>
+          <p class="text-gray-700">
+            <%= head ? `${head.name} (${head.email})` : "No department head assigned." %>
+          </p>
+       </div>
+
         <!-- Form to assign a new head -->
         <form action="/admin/departments/<%= d.id %>/head" method="POST" class="mt-2 flex items-center space-x-2">
         <select name="staffId" class="border rounded px-2 py-1">
@@ -70,6 +70,7 @@ include("../partials/navbar-admin") %> <% if (success_msg && success_msg.length
             Assign Head
         </button>
         </form>
+     
 
 
         <!-- Services -->
@@ -82,20 +83,7 @@ include("../partials/navbar-admin") %> <% if (success_msg && success_msg.length
             <li class="flex justify-between items-center">
               <span><%= s.name %> - $<%= s.fee %></span>
 
-              <!-- Edit Service -->
-              <form
-                action="/admin/services/<%= s.id %>/edit"
-                method="GET"
-                class="inline"
-              >
-                <button
-                  class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
-                >
-                  Edit
-                </button>
-              </form>
-
-              <!-- Delete Service -->
+              <!-- Remove Service -->
               <form
                 action="/admin/services/<%= s.id %>/delete"
                 method="POST"
@@ -105,7 +93,7 @@ include("../partials/navbar-admin") %> <% if (success_msg && success_msg.length
                 <button
                   class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
                 >
-                  Delete
+                  Remove
                 </button>
               </form>
             </li>

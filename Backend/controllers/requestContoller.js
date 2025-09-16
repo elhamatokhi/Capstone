@@ -49,7 +49,7 @@ export const changeRequestStatus = async (req, res) => {
     //   html: `<p>Your request #${requestId} status changed to: ${status}</p>`,
     // });
     req.flash("success_msg", `Request ${status} successfully.`);
-    res.redirect(`/requests/${requestId}`);
+    res.redirect(`/${req.user.role}/requests/`);
   } catch (error) {
     console.error("Error changing request status:", error);
     req.flash("error_msg", "Failed to update request status.");
@@ -91,7 +91,6 @@ export const fetchRequestDetails = async (requestId) => {
 export const getRequestDetails = async (req, res) => {
   const requestId = req.params.id;
   const role = req.user.role;
-  console.log(role);
   try {
     const requests = await fetchRequestDetails(requestId);
     res.render("staff/requestDetails", {
@@ -102,7 +101,7 @@ export const getRequestDetails = async (req, res) => {
   } catch (err) {
     console.error("Error fetching request details:", err);
     req.flash("error_msg", "Failed to load request details.");
-    res.redirect("/staff/requests");
+    res.redirect(`/${role}/requests`);
   }
 };
 
