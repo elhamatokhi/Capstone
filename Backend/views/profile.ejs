@@ -12,6 +12,20 @@ include(navbarPartial) %> <% if (success_msg && success_msg.length > 0) { %>
     const flash = document.getElementById("flash-success");
     if (flash) flash.style.display = "none";
   }, 2000);
+
+  const btn = document.getElementById("notif-btn");
+  const dropdown = document.getElementById("notif-dropdown");
+
+  btn.addEventListener("click", () => {
+    dropdown.classList.toggle("hidden");
+  });
+
+  // Optional: close dropdown if clicked outside
+  window.addEventListener("click", (e) => {
+    if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.add("hidden");
+    }
+  });
 </script>
 <div class="max-w-6xl mx-auto p-6">
   <div class="flex flex-col lg:flex-row gap-8">

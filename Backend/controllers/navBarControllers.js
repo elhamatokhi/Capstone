@@ -1,8 +1,14 @@
 import pool from "../config/db.js";
+import { fetchNotifications } from "./requestContoller.js";
 
 export const getContact = async (req, res) => {
+  const notifications = await fetchNotifications(req.user.id);
+
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
   res.render("contact", {
     navbarPartial: `../views/partials/navbar-${req.user.role}`,
+    notifications,
+    unreadCount,
   });
 };
 
@@ -26,4 +32,15 @@ export const postContact = async (req, res) => {
     console.error("Error submitting contact form:", error);
     return res.status(500).json({ message: "Internal server error." });
   }
+};
+
+export const getAbout = async (req, res) => {
+  const notifications = await fetchNotifications(req.user.id);
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
+
+  res.render(`about`, {
+    navbarPartial: `../views/partials/navbar-${req.user.role}`,
+    notifications,
+    unreadCount,
+  });
 };

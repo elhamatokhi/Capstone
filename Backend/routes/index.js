@@ -4,7 +4,11 @@ import {
   loginUser,
 } from "../controllers/authinticationController.js";
 import { ensureAuthenticated, requireRoles } from "../middleware/middleware.js";
-import { postContact, getContact } from "../controllers/navBarControllers.js";
+import {
+  postContact,
+  getContact,
+  getAbout,
+} from "../controllers/navBarControllers.js";
 import {
   changeRequestStatus,
   getRequestDetails,
@@ -14,6 +18,7 @@ import {
   getProfile,
   updateProfile,
 } from "../controllers/profilesController.js";
+import { fetchNotifications } from "../controllers/requestContoller.js";
 import passport from "passport";
 
 const router = Router();
@@ -66,11 +71,7 @@ router.get(
 );
 
 // About page
-router.get(`/about`, (req, res) => {
-  res.render(`about`, {
-    navbarPartial: `../views/partials/navbar-${req.user.role}`,
-  });
-});
+router.get(`/about`, getAbout);
 
 // Contact page
 router.get(`/contact`, getContact);

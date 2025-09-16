@@ -167,6 +167,8 @@ export const deleteRequest = async (req, res) => {
 export const getHistory = async (req, res) => {
   const userId = req.user.id;
   const { status, service_name, startDate, endDate } = req.query;
+  const notifications = await fetchNotifications(req.user.id);
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
   try {
     let query = db("requests as r")
       .select(
@@ -186,7 +188,12 @@ export const getHistory = async (req, res) => {
       query = query.whereBetween("r.created_at", startDate, endDate);
 
     const requests = await query;
-    res.render("citizen/history", { requests, filters: req.query });
+    res.render("citizen/history", {
+      requests,
+      filters: req.query,
+      notifications,
+      unreadCount,
+    });
   } catch (error) {
     console.log("Error fetching history:", error);
     res.status(500).send("Internal server error.");

@@ -1,5 +1,6 @@
 import pool from "../config/db.js";
 
+import { fetchNotifications } from "./requestContoller.js";
 /* -------------- Profile Controllers --------------- */
 // Setup profile
 export const getProfile = async (req, res) => {
@@ -20,9 +21,14 @@ export const getProfile = async (req, res) => {
       user.date_of_birth = "Enter date of birth";
     }
 
+    const notifications = await fetchNotifications(req.user.id);
+    const unreadCount = notifications.filter((n) => !n.is_read).length;
+
     res.render(`profile`, {
       user,
       navbarPartial: `../views/partials/navbar-${req.user.role}`,
+      notifications,
+      unreadCount,
     });
   } catch (error) {
     console.log("Error", error);
