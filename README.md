@@ -1,59 +1,40 @@
 # E-Government Citizen Services Portal
 
+The E-Government Citizen Services Portal is a web application that enables citizens to apply for various government services online—without visiting offices. Users can submit requests for services like passport renewal, national ID updates, business licenses, or land registration, upload required documents, pay fees (simulated), and track the status of their requests. Government officers and admins can review, process, and manage all requests efficiently.
+
 ![Project Banner](./Backend/public/images/banner.png)
 
-A digital platform that allows citizens to request government services online, officers to review requests, and admins to manage the system and view reports.
+[🚀 Live Demo on Render](#) <!-- Replace # with your live URL -->
 
----
+## 💡 Key Features
 
-## 🌟 Features
+- 👤 Multi-user types: Citizens, Officers, Department Heads, Admins
+- 📝 Service Requests: Submit, track, and manage requests
+- 📄 Document Upload: PDF/JPG uploads for applications
+- 💰 Payment Simulation: Fake payment success page for fee-based services
+- 🔍 Search & Filter: By name, request ID, status, service type, and date
+- 🔔 Notifications: Citizens notified when request status changes
+- 📊 Reports & Statistics: Admins can view request counts, approvals/rejections, and fees collected
+- 🏢 Multi-department support: Each department sees only its requests; admin sees all
+- 🌐 Responsive design using EJS templates and Tailwind CSS
 
-### User Roles
+## ⚙️ Implementation Outline
 
-| Role                | Capabilities                                                    |
-| ------------------- | --------------------------------------------------------------- |
-| **Citizen**         | Submit service requests, upload documents, track request status |
-| **Officer**         | Review, approve/reject requests                                 |
-| **Department Head** | Manage officers, assign requests                                |
-| **Admin**           | Full system management, reports & statistics                    |
+### Built With
 
----
+- **Frontend**: EJS templates, Tailwind CSS
+- **Backend**: Node.js, Express.js
+- **Database**: PostgreSQL
+- **Authentication**: Passport.js (local and Google OAuth)
+- **File Uploads**: Multer
 
-### Service Requests Workflow
+### Setup Instructions
 
-1. **Submitted** → Citizen submits a request.
-2. **Under Review** → Officer reviews documents and request.
-3. **Approved / Rejected** → Status is updated, citizen notified.
-
-![Request Workflow](./Backend/public/images/requestflow.png)
-
-## 📦 Database Structure
-
-- **users:** All citizens, officers, admins
-- **departments:** Interior, Commerce, Housing, etc.
-- **services:** Offered services per department
-- **requests:** Applications submitted by citizens
-- **documents:** Uploaded files linked to requests
-- **request_assignments:** Store assigned requests to staff
-- **notifications:** User notifications
-
----
-
-## 💻 Tech Stack
-
-- **Backend:** Node.js, Express.js
-- **Database:** PostgreSQL
-- **Frontend:** EJS Templates, Tailwind CSS
-- **Security:** Session-based authentication, input validation
-
----
-
-## 🚀 Getting Started
-
-1. Clone the repository:
+1. **Clone the repository**
 
 ```bash
 git clone https://github.com/elhamatokhi/Capstone.git
+cd e-government-portal
 ```
 
 Install dependencies:
@@ -62,7 +43,21 @@ Install dependencies:
 npm install
 ```
 
-Set up PostgreSQL database and run migrations.
+Create .env file with database credentials and session secret
+
+```bash
+DB_USER=your_db_user
+DB_PASSWORD=your_db_password
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=e_gov_portal
+SESSION_SECRET=your_secret_key
+PORT=3000
+```
+
+Run the application
+
+node index.js
 
 Start the server:
 
@@ -70,6 +65,18 @@ Start the server:
 nodemon index.js
 ```
 
-Visit http://localhost:3000 in your browser.
+The app will be live at http://localhost:3000
 
-For more details, see the [Project Wiki](https://github.com/elhamatokhi/Capstone/wiki)
+## Documentation
+
+For detailed usage and developer guidelines, see the [Project Wiki](https://github.com/elhamatokhi/Capstone/wiki)
+
+Image & Asset Attribution
+
+Government service icons: Custom or sourced appropriately
+
+File and document icons: Open source assets
+
+License
+
+This project is licensed under the MIT License
