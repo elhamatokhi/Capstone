@@ -69,9 +69,10 @@ success_msg.length > 0) { %>
       />
 
       <button type="submit">Search</button>
-    </form>
+  <a href="/citizen/history" class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">Clear</a>
+</form>
   </div>
-
+  <% if (requests.length > 0) { %>
   <table class="w-full border-collapse bg-white shadow rounded-lg">
     <thead>
       <tr class="bg-gray-100">
@@ -134,6 +135,10 @@ success_msg.length > 0) { %>
       <% }) %>
     </tbody>
   </table>
+   <% } else { %>
+  <p class="text-gray-500 mt-4">No requests matched your search.</p>
+  <% } %>
+
 </div>
 
 <%- include('../partials/footer') %>
