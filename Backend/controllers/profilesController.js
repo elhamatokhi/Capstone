@@ -36,11 +36,16 @@ export const getProfile = async (req, res) => {
 };
 
 // Get edit
-export const editProfile = (req, res) => {
+export const editProfile = async (req, res) => {
   const user = req.user;
+  const notifications = await fetchNotifications(req.user.id);
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
+
   res.render("edit", {
     user,
     navbarPartial: `../views/partials/navbar-${req.user.role}`,
+    notifications,
+    unreadCount,
   });
 };
 

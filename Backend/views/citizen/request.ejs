@@ -1,5 +1,20 @@
 <%- include('../partials/header', { title: "Request Service" }) %> <%-
 include('../partials/navbar-citizen.ejs') %>
+<script>
+  const btn = document.getElementById("notif-btn");
+  const dropdown = document.getElementById("notif-dropdown");
+
+  btn.addEventListener("click", () => {
+    dropdown.classList.toggle("hidden");
+  });
+
+  // Optional: close dropdown if clicked outside
+  window.addEventListener("click", (e) => {
+    if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.add("hidden");
+    }
+  });
+</script>
 
 <div class="max-w-xl mx-auto p-6">
   <h2 class="text-2xl font-bold mb-4">Request a Service</h2>

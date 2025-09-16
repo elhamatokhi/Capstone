@@ -1,6 +1,22 @@
 <%- include('../partials/header', { title: "Admin Dashboard" }) %> <%-
 include('../partials/navbar-admin') %>
+ <% if (success_msg &&
+success_msg.length > 0) { %>
 
+<div
+  id="flash-success"
+  class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md"
+>
+  <%= success_msg[0] %>
+</div>
+<% } %>
+
+<script>
+  setTimeout(function () {
+    const flash = document.getElementById("flash-success");
+    if (flash) flash.style.display = "none";
+  }, 3000);
+</script>
 <!-- Search and Filter Form -->
 <div class="max-w-8xl mx-auto p-6 mb-4 mt-2 bg-white shadow rounded-lg">
 
@@ -23,6 +39,7 @@ include('../partials/navbar-admin') %>
   <select name="status">
     <option value="">-- Status --</option>
     <option value="under_review" <%= filters.status === 'under_review' ? 'selected' : '' %>>Under Review</option>
+      <option value="submitted" <%= filters.status === 'submitted' ? 'selected' : '' %>>Submitted</option>
     <option value="approved" <%= filters.status === 'approved' ? 'selected' : '' %>>Approved</option>
     <option value="rejected" <%= filters.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
   </select>

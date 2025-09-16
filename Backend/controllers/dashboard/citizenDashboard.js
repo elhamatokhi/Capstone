@@ -39,6 +39,8 @@ export const services = async (req, res, next) => {
 export const requestService = async (req, res) => {
   try {
     const serviceId = parseInt(req.params.serviceId, 10);
+    const notifications = await fetchNotifications(req.user.id);
+    const unreadCount = notifications.filter((n) => !n.is_read).length;
 
     if (isNaN(serviceId)) {
       return res.redirect("/citizen/dashboard");
@@ -50,7 +52,12 @@ export const requestService = async (req, res) => {
     );
 
     const fields = fieldsResult.rows;
-    res.render("citizen/request", { fields, serviceId });
+    res.render("citizen/request", {
+      fields,
+      serviceId,
+      notifications,
+      unreadCount,
+    });
   } catch (error) {
     console.log(`Error fetching services: `, error);
     res.status(500).send("Internal server error.");
