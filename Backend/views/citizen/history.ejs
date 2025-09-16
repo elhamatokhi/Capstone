@@ -107,12 +107,9 @@ success_msg.length > 0) { %>
             method="POST"
             style="display: inline"
           >
-            <button
-              type="submit"
-              class="text-blue-600 underline hover:text-blue-800"
-            >
-              Pay Now
-            </button>
+            <a href="/success" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            Complete Payment
+             </a>
           </form>
           <% } else if(req.payment_status === "paid") { %>
           <span class="text-green-600">Paid</span>

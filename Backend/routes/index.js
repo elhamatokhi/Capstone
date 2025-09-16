@@ -92,4 +92,16 @@ router.get("/profile", getProfile);
 router.get("/profile/edit", editProfile);
 router.post("/profile/edit", updateProfile);
 
+router.get("/success", (req, res) => {
+  // Some fake data
+  const fakePayment = {
+    transactionId: "TXN123456",
+    amount: 50.0,
+    currency: "USD",
+    paymentMethod: "Credit Card",
+    date: new Date().toLocaleString(),
+    userName: req.user ? req.user.name : "John Doe",
+  };
+  res.render("citizen/payment-success", { payment: fakePayment });
+});
 export default router;

@@ -1,5 +1,4 @@
-<%- include('../partials/header', { title: "Payment Success" }) %> <%-
-include('../partials/navbar-citizen.ejs') %>
+<%- include('../partials/header', { title: "Payment Success" }) %>
 
 <div class="max-w-xl mx-auto p-8 bg-white shadow rounded-lg mt-8">
   <% if (success_msg && success_msg.length > 0) { %>
@@ -7,36 +6,29 @@ include('../partials/navbar-citizen.ejs') %>
     <%= success_msg[0] %>
   </div>
   <% } %>
-  <h1 class="text-2xl font-bold mb-4 text-blue-700">Payment Successful!</h1>
-  <p class="mb-4 text-gray-700">
-    Thank you for your payment. Here are your payment details:
-  </p>
+
   <div class="mb-6">
-    <div class="mb-2">
-      <span class="font-semibold">Service Name:</span> <%= payment.name %>
-    </div>
-    <div class="mb-2">
-      <span class="font-semibold">Amount Paid:</span> $<%= payment.fee %>
-    </div>
-    <div class="mb-2">
-      <span class="font-semibold">Payment Status:</span> <%= payment.status %>
-    </div>
-    <div class="mb-2">
-      <span class="font-semibold">Payment Date:</span> <%=
-      payment.paid_at.toISOString().slice(0, 10) %>
-    </div>
-    <div class="mb-2">
-      <span class="font-semibold">Request ID:</span> <%= payment.request_id %>
-    </div>
-    <div class="mb-2">
-      <span class="font-semibold">Payment ID:</span> <%= payment.id %>
-    </div>
+    <h1 class="text-3xl font-bold text-green-600 mb-4">Payment Successful!</h1>
+    <p class="mb-4 text-gray-700">
+      Thank you <%= payment.userName %> ! for your payment. Here are your
+      payment details:
+    </p>
+    <p class="text-gray-700 mb-2">
+      Transaction ID: <strong><%= payment.transactionId %></strong>
+    </p>
+    <p class="text-gray-700 mb-2">
+      Amount: <strong><%= payment.currency %> <%= payment.amount %></strong>
+    </p>
+    <p class="text-gray-700 mb-2">
+      Payment Method: <strong><%= payment.paymentMethod %></strong>
+    </p>
+    <p class="text-gray-500 text-sm mb-6">Date: <%= payment.date %></p>
+    <a
+      href="/citizen/history"
+      class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+      >Back to My Requests</a
+    >
   </div>
-  <a
-    href="/citizen/history"
-    class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-    >Back to My Requests</a
-  >
 </div>
 
 <%- include('../partials/footer') %>

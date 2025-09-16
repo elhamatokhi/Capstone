@@ -6,8 +6,6 @@ import {
   submitRequest,
   getHistory,
   deleteRequest,
-  paymentSuccess,
-  postPayment,
   getDashboard,
 } from "../controllers/dashboard/citizenDashboard.js";
 
@@ -36,9 +34,5 @@ citizenRouter.post("/notifications/:id/read", markNotificationAsRead);
 
 // Citizen request history
 citizenRouter.get("/history", getHistory);
-
-// GET fake payment success page
-citizenRouter.get("/payment-success", paymentSuccess);
-citizenRouter.post("/pay/:id", postPayment);
 
 export default citizenRouter;

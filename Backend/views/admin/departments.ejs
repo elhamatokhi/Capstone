@@ -45,7 +45,7 @@ include("../partials/navbar-admin") %> <% if (success_msg && success_msg.length
         </svg>
       </button>
 
-      <!-- Department details (hidden by default) -->
+      <!-- Department details -->
       <div id="details-<%= d.id %>" class="hidden p-4 space-y-4">
         
            <!-- Department Head -->
@@ -57,7 +57,7 @@ include("../partials/navbar-admin") %> <% if (success_msg && success_msg.length
           </p>
        </div>
 
-        <!-- Form to assign a new head -->
+        <!-- assign a new head -->
         <form action="/admin/departments/<%= d.id %>/head" method="POST" class="mt-2 flex items-center space-x-2">
         <select name="staffId" class="border rounded px-2 py-1">
             <% d.staff.forEach(st => { %>

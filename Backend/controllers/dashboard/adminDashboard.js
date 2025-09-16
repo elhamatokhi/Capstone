@@ -21,13 +21,37 @@ export const fetchServices = async () => {
   return result.rows;
 };
 
+export const fetchDeptRequestCounts = async () => {
+  const result = await pool.query(`
+    SELECT d.id AS department_id, d.name AS department_name, 
+           COUNT(r.id) AS request_count,
+           COUNT(CASE WHEN r.status = 'approved' THEN 1 END) AS approved_count,
+           COUNT(CASE WHEN r.status = 'rejected' THEN 1 END) AS rejected_count
+    FROM departments d
+    LEFT JOIN services s ON d.id = s.department_id
+    LEFT JOIN requests r ON s.id = r.service_id
+    GROUP BY d.id, d.name
+    ORDER BY d.id;
+  `);
+
+  return result.rows; // returns array of objects
+};
+
 // Dashboard
 export const adminDashboard = async (req, res) => {
   const user = req.user;
   const users = await fetchUsers();
   const requests = await fetchRequests();
   const services = await fetchServices();
-  res.render("admin/dashboard", { requests, user, users, services });
+  const deptCounts = await fetchDeptRequestCounts();
+
+  res.render("admin/dashboard", {
+    requests,
+    user,
+    users,
+    services,
+    deptCounts,
+  });
 };
 
 // getAll requests
