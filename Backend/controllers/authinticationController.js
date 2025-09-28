@@ -39,7 +39,6 @@ export const registerUser = async (req, res) => {
 };
 
 // Loign
-
 export const loginUser = (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
@@ -48,14 +47,25 @@ export const loginUser = (req, res, next) => {
     }
 
     if (!user) {
-      req.flash("error_msg", "Invalid email or password.");
-      return res.redirect("/login");
+      return res.status(401).json({ message: "Invalid email or password" });
     }
-    req.logIn(user, (err) => {
-      if (err) return res.status(500).json({ message: "Login failed" });
 
-      const role = req.user.role;
-      return res.redirect(`/${role}/dashboard`);
+    req.logIn(user, (err) => {
+      if (err) {
+        console.log("Login session error:", err);
+        return res.status(500).json({ message: "Login failed" });
+      }
+
+      // Login successful, return JSON only
+      return res.status(200).json({
+        message: "Login successful",
+        user: {
+          id: req.user.id,
+          name: req.user.name,
+          email: req.user.email,
+          role: req.user.role,
+        },
+      });
     });
   })(req, res, next);
 };
