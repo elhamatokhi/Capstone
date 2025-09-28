@@ -43,25 +43,16 @@ export const registerUser = async (req, res) => {
 export const loginUser = (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
-      console.error("Login error:", err);
-      return res.status(500).render("auth", {
-        erorr_msg: "An unexpected error occurred. Please try again later.",
-      });
+      console.log("Login error:", err);
+      return res.status(500).json({ message: "Internal server error" });
     }
 
     if (!user) {
-      return res.status(404).render("auth", {
-        erorr_msg: "Invalid email or password. Please check your credentials.",
-      });
+      req.flash("error_msg", "Invalid email or password.");
+      return res.redirect("/login");
     }
-
     req.logIn(user, (err) => {
-      if (err) {
-        console.error("Login session error:", err);
-        return res.status(500).render("auth", {
-          error_msg: "Login failed. Please try again.",
-        });
-      }
+      if (err) return res.status(500).json({ message: "Login failed" });
 
       const role = req.user.role;
       return res.redirect(`/${role}/dashboard`);
