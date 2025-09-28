@@ -18,8 +18,6 @@ const pool = new Pool({
     console.log("✅ Database connected! Current time:", res.rows[0]);
   } catch (err) {
     console.error("❌ Database connection failed:", err);
-  } finally {
-    await pool.end();
   }
 })();
 
