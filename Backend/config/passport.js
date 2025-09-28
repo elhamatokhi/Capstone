@@ -12,7 +12,7 @@ passport.use(
       try {
         const result = await pool.query(
           `SELECT * FROM users WHERE email = $1`,
-          [email.toLowerCase()]
+          [email]
         );
 
         if (result.rows.length === 0) {
@@ -23,7 +23,7 @@ passport.use(
         const match = await bcrypt.compare(password, user.password);
         if (!match)
           return done(null, false, { message: "Invalid email or Password" });
-
+        console.log(user);
         return done(null, user);
       } catch (error) {
         return done(error);
