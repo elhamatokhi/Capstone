@@ -44,13 +44,13 @@ export const loginUser = (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
       console.error("Login error:", err);
-      return res.status(500).render("login", {
+      return res.status(500).render("auth", {
         erorr_msg: "An unexpected error occurred. Please try again later.",
       });
     }
 
     if (!user) {
-      return res.status(404).render("login", {
+      return res.status(404).render("auth", {
         erorr_msg: "Invalid email or password. Please check your credentials.",
       });
     }
@@ -58,7 +58,7 @@ export const loginUser = (req, res, next) => {
     req.logIn(user, (err) => {
       if (err) {
         console.error("Login session error:", err);
-        return res.status(500).render("login", {
+        return res.status(500).render("auth", {
           error_msg: "Login failed. Please try again.",
         });
       }
