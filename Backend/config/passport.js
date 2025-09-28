@@ -14,6 +14,7 @@ passport.use(
           `SELECT * FROM users WHERE email = $1`,
           [email.toLowerCase()]
         );
+
         if (result.rows.length === 0) {
           return done(null, false, { message: "Invalid email or Password" });
         }
@@ -30,6 +31,7 @@ passport.use(
     }
   )
 );
+
 // Passort strategy
 passport.use(
   new GoogleStrategy(
@@ -42,9 +44,6 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        console.log("accessToken:", accessToken);
-        console.log("refreshToken:", refreshToken);
-
         const email = profile.emails[0].value;
         const username = profile.displayName;
 
