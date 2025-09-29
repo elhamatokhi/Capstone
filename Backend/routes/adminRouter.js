@@ -12,6 +12,7 @@ import {
   getEditStaff,
   editStaff,
   deleteStaff,
+  createStaff,
 } from "../controllers/dashboard/adminDashboard.js";
 import {
   fetchRequests,
@@ -58,6 +59,7 @@ adminRouter.get("/staff", getAllStaff);
 adminRouter.post("/admin/staff/:id/department", assignStaffDepartment);
 
 /* ----------------------------- STAFF ROUTES -------------------------- */
+adminRouter.post("/add-user", createStaff);
 // Edit staff
 adminRouter.get("/staff/:id/edit", getEditStaff);
 adminRouter.post("/staff/:id/edit", editStaff);

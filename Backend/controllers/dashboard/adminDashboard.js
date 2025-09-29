@@ -1,6 +1,6 @@
 import pool from "../../config/db.js";
 import { db } from "../../config/knex.js";
-
+import bcrypt from "bcrypt";
 // Fetch all requests
 export const fetchRequests = async () => {
   const result = await pool.query(
@@ -282,13 +282,13 @@ export const assignDepartmentHead = async (req, res) => {
   const { staffId } = req.body;
 
   try {
-    // 1️⃣ Demote current head if any
+    //  Demote current head if any
     await pool.query(
       `UPDATE users SET role = 'staff' WHERE role = 'department_head' AND department_id = $1`,
       [departmentId]
     );
 
-    // 2️⃣ Promote new head
+    //  Promote new head
     await pool.query(
       `UPDATE users SET role = 'department_head' WHERE id = $1 AND department_id = $2`,
       [staffId, departmentId]
@@ -325,10 +325,23 @@ export const assignStaffDepartment = async (req, res) => {
 
 // Get all Staff
 export const getAllStaff = async (req, res) => {
-  const results = await pool.query(`SELECT * FROM users WHERE role = 'staff'`);
+  try {
+    const results = await pool.query(
+      `SELECT * FROM users WHERE role IN ('staff', 'department_head')`
+    );
 
-  const staff = results.rows;
-  res.render("admin/staff", { staff });
+    const departmentsResult = await pool.query(
+      `SELECT id, name FROM departments`
+    );
+
+    const departments = departmentsResult.rows;
+    const staff = results.rows;
+
+    res.render("admin/staff", { staff, departments });
+  } catch (error) {
+    console.error("Error fetching staff:", error);
+    res.status(500).send("Internal server error");
+  }
 };
 
 // GET EDIT
@@ -381,5 +394,23 @@ export const deleteStaff = async (req, res) => {
     console.error("Error updating staff:", err);
     req.flash("error_msg", "Failed to update staff.");
     res.redirect("/admin/staff");
+  }
+};
+
+export const createStaff = async (req, res) => {
+  try {
+    const { name, email, password, role, department_id } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await pool.query(
+      `INSERT INTO users (name, email, password, role, department_id) VALUES ($1, $2, $3,$4,$5)`,
+      [name, email, hashedPassword, role, department_id] // role = 'staff' or 'department_head'
+    );
+    req.flash("success_msg", "staff added successfully!");
+    console.log(`${role} account created`);
+    res.redirect("/admin/staff");
+  } catch (error) {
+    console.error("Internal server error: ", error);
+    res.status(500).send("Error adding staff.");
   }
 };
