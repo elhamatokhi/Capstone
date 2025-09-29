@@ -66,7 +66,6 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
     const role = req.user.role;
-    console.log("Google login successful, user:", req.user);
     res.redirect(`/${role}/dashboard`);
   }
 );

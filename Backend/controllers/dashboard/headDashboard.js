@@ -18,7 +18,6 @@ export const fetchRequestsByDepartment = async (departmentId) => {
 export const headDashboard = async (req, res) => {
   const user = req.user;
   const requests = await fetchRequestsByDepartment(req.user.department_id);
-  console.log(requests);
   res.render("department_head/dashboard", { requests, user });
 };
 

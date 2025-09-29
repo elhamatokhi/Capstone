@@ -100,7 +100,6 @@ export const getAllRequests = async (req, res) => {
 // getAll requests
 export const getAllServices = async (req, res) => {
   const services = await fetchServices();
-  console.log(services);
   res.render("admin/services", { services });
 };
 
@@ -261,7 +260,6 @@ export const editService = async (req, res) => {
 export const changeStatus = async (req, res) => {
   try {
     const serviceId = req.params.id;
-    console.log(serviceId);
     await pool.query(
       `UPDATE services
        SET is_active = NOT is_active 
@@ -397,6 +395,21 @@ export const deleteStaff = async (req, res) => {
   }
 };
 
+// Delete Staff
+export const deleteCitizen = async (req, res) => {
+  try {
+    const citizenId = req.params.id;
+    await pool.query(`DELETE FROM users WHERE id = $1`, [citizenId]);
+
+    req.flash("success_msg", "Citizen removed successfully!");
+    res.redirect("/admin/users");
+  } catch (err) {
+    console.error("Error updating users:", err);
+    req.flash("error_msg", "Failed to update user.");
+    res.redirect("/admin/users");
+  }
+};
+
 export const createStaff = async (req, res) => {
   try {
     const { name, email, password, role, department_id } = req.body;
@@ -407,7 +420,6 @@ export const createStaff = async (req, res) => {
       [name, email, hashedPassword, role, department_id] // role = 'staff' or 'department_head'
     );
     req.flash("success_msg", "staff added successfully!");
-    console.log(`${role} account created`);
     res.redirect("/admin/staff");
   } catch (error) {
     console.error("Internal server error: ", error);

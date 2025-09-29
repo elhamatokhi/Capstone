@@ -53,7 +53,6 @@ passport.use(
 
         if (result.rows.length === 0) {
           // New user - Signup
-          console.log("Google Sign up: ", email);
           const insertResult = await pool.query(
             `INSERT INTO users (name,email,password) VALUES ($1,$2,$3) RETURNING *`,
             [username, email, ""]
@@ -61,8 +60,6 @@ passport.use(
           return done(null, insertResult.rows[0]);
         }
 
-        // Returning user = login
-        console.log("Google login:", email);
         return done(null, result.rows[0]);
       } catch (error) {
         return done(error, null);

@@ -67,5 +67,3 @@ export const getStaffRequest = async (req, res) => {
     res.redirect("/staff/dashboard");
   }
 };
-
-// Add comments to request

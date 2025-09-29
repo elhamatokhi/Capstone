@@ -14,7 +14,6 @@ export const requireRoles =
       return res.redirect("/login");
     }
     if (!roles.includes(req.user.role)) {
-      console.log("Access denied. User role:", req.user.role, roles);
       return res.status(403).send("Forbidden");
     }
     next();

@@ -13,6 +13,7 @@ import {
   editStaff,
   deleteStaff,
   createStaff,
+  deleteCitizen,
 } from "../controllers/dashboard/adminDashboard.js";
 import {
   fetchRequests,
@@ -66,5 +67,6 @@ adminRouter.post("/staff/:id/edit", editStaff);
 
 // DELETE Staff
 adminRouter.post("/staff/:id/delete", deleteStaff);
+adminRouter.post("/citizen/:id/delete", deleteCitizen);
 
 export default adminRouter;
