@@ -55,9 +55,7 @@ app.use("/citizen", citizenRouter);
 app.use("/admin", adminRouter);
 app.use("/staff", staffRouter);
 app.use("/", router);
-// app.use((req, res) => {
-//   res.status(404).send("404: Page Not Found");
-// });
+
 app.listen(PORT, () => {
   console.log(`Server is listerning....on port ${PORT}`);
 });

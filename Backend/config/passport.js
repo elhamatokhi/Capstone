@@ -23,7 +23,6 @@ passport.use(
         const match = await bcrypt.compare(password, user.password);
         if (!match)
           return done(null, false, { message: "Invalid email or Password" });
-        console.log(user);
         return done(null, user);
       } catch (error) {
         return done(error);
@@ -72,6 +71,7 @@ passport.use(
   )
 );
 
+// Store user info in the session
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
