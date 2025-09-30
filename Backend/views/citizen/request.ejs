@@ -8,7 +8,6 @@ include('../partials/navbar-citizen.ejs') %>
     dropdown.classList.toggle("hidden");
   });
 
-  // Optional: close dropdown if clicked outside
   window.addEventListener("click", (e) => {
     if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
       dropdown.classList.add("hidden");
@@ -32,6 +31,7 @@ include('../partials/navbar-citizen.ejs') %>
         name="name"
         id=""
         class="mt-1 block w-full border rounded p-2"
+        required
       />
     </label>
 
@@ -44,6 +44,7 @@ include('../partials/navbar-citizen.ejs') %>
         name="national_id"
         id=""
         class="mt-1 block w-full border rounded p-2"
+        required
       />
     </label>
     <label for="name">
@@ -53,6 +54,7 @@ include('../partials/navbar-citizen.ejs') %>
         name="dob"
         id=""
         class="mt-1 block w-full border rounded p-2"
+        required
       />
     </label>
     <label for="name">
@@ -62,6 +64,7 @@ include('../partials/navbar-citizen.ejs') %>
         name="email"
         id=""
         class="mt-1 block w-full border rounded p-2"
+        required
       />
     </label>
 

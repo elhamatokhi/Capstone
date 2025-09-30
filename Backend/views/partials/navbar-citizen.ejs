@@ -1,61 +1,152 @@
-<nav class="bg-blue-600 text-white p-4 flex justify-between items-center">
-  <h1 class="text-xl font-bold">Citizen Portal</h1>
+<nav class="bg-blue-600 text-white p-4">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <!-- Title -->
+    <h1 class="text-xl font-bold">Citizen Portal</h1>
 
-  <ul class="flex space-x-6 items-center">
-    <li><a href="/citizen/dashboard" class="hover:underline">Dashboard</a></li>
-    <li><a href="/contact" class="hover:underline">Contact</a></li>
-    <li class="relative">
-      <button id="notif-btn" class="hover:underline flex items-center">
-        Notifications <% if (typeof unreadCount !== 'undefined' && unreadCount >
-        0) { %>
-        <span
-          class="ml-1 inline-block w-5 h-5 text-xs bg-red-500 rounded-full text-center"
+    <!-- Hamburger (mobile only) -->
+    <button
+      id="citizen-menu-toggle"
+      class="sm:hidden focus:outline-none focus:ring-2 focus:ring-white rounded"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        ></path>
+      </svg>
+    </button>
+
+    <!-- Desktop Menu -->
+    <ul class="hidden sm:flex space-x-6 items-center">
+      <li>
+        <a href="/citizen/dashboard" class="hover:underline">Dashboard</a>
+      </li>
+      <li><a href="/contact" class="hover:underline">Contact</a></li>
+
+      <!-- Notifications -->
+      <li class="relative">
+        <button id="notif-btn" class="hover:underline flex items-center">
+          Notifications <% if (typeof unreadCount !== 'undefined' && unreadCount
+          > 0) { %>
+          <span
+            class="ml-1 inline-block w-5 h-5 text-xs bg-red-500 rounded-full text-center"
+          >
+            <%= unreadCount %>
+          </span>
+          <% } %>
+        </button>
+
+        <!-- Notification dropdown -->
+        <div
+          id="notif-dropdown"
+          class="hidden absolute right-0 mt-2 w-80 bg-white text-black rounded shadow-lg max-h-96 overflow-y-auto z-50"
         >
-          <%= unreadCount %>
-        </span>
-        <% } %>
+          <ul class="divide-y divide-gray-200">
+            <% if (notifications.length === 0) { %>
+            <li class="p-4 text-gray-500">No notifications</li>
+            <% } else { %> <% notifications.forEach(n => { %>
+            <li
+              class="<%= n.is_read ? 'bg-white text-gray-500' : 'bg-blue-100 font-bold' %> p-4 flex justify-between items-center"
+            >
+              <div>
+                <span><%= n.message %></span>
+                <small class="block text-xs text-gray-400 mt-1"
+                  ><%= new Date(n.created_at).toLocaleString() %></small
+                >
+              </div>
+              <% if (!n.is_read) { %>
+              <form
+                action="/citizen/notifications/<%= n.id %>/read"
+                method="POST"
+                class="ml-2"
+              >
+                <button
+                  type="submit"
+                  class="text-blue-600 hover:text-blue-800 text-sm font-semibold"
+                >
+                  Mark as read
+                </button>
+              </form>
+              <% } %>
+            </li>
+            <% }) %> <% } %>
+          </ul>
+        </div>
+      </li>
+
+      <li><a href="/about" class="hover:underline">About</a></li>
+      <li>
+        <a href="/citizen/history" class="hover:underline">My Requests</a>
+      </li>
+      <li><a href="/profile" class="hover:underline">Profile</a></li>
+      <li><a href="/logout" class="hover:underline text-red-200">Logout</a></li>
+    </ul>
+  </div>
+
+  <!-- Mobile Dropdown -->
+  <div id="citizen-mobile-menu" class="sm:hidden hidden mt-4">
+    <ul
+      class="fixed inset-0 bg-blue-700 bg-opacity-95 flex flex-col justify-center items-center space-y-6 text-xl z-40 gap-6"
+    >
+      <button
+        id="citizen-menu-close"
+        class="absolute top-4 right-6 text-white text-3xl"
+      >
+        &times;
       </button>
 
-      <!-- Notification dropdown -->
-      <div
-        id="notif-dropdown"
-        class="hidden absolute right-0 mt-2 w-80 bg-white text-black rounded shadow-lg max-h-96 overflow-y-auto z-50"
-      >
-        <ul class="divide-y divide-gray-200">
-          <% if (notifications.length === 0) { %>
-          <li class="p-4 text-gray-500">No notifications</li>
-          <% } else { %> <% notifications.forEach(n => { %>
-          <li
-            class="<%= n.is_read ? 'bg-white text-gray-500' : 'bg-blue-100 font-bold' %> p-4 flex justify-between items-center"
-          >
-            <div>
-              <span><%= n.message %></span>
-              <small class="block text-xs text-gray-400 mt-1"
-                ><%= new Date(n.created_at).toLocaleString() %></small
-              >
-            </div>
-            <% if (!n.is_read) { %>
-            <form
-              action="/citizen/notifications/<%= n.id %>/read"
-              method="POST"
-              class="ml-2"
-            >
-              <button
-                type="submit"
-                class="text-blue-600 hover:text-blue-800 text-sm font-semibold"
-              >
-                Mark as read
-              </button>
-            </form>
-            <% } %>
-          </li>
-          <% }) %> <% } %>
-        </ul>
-      </div>
-    </li>
-    <li><a href="/about" class="hover:underline">About</a></li>
-    <li><a href="/citizen/history" class="hover:underline">My Requests</a></li>
-    <li><a href="/profile" class="hover:underline">Profile</a></li>
-    <li><a href="/logout" class="hover:underline text-red-200">Logout</a></li>
-  </ul>
+      <li>
+        <a href="/citizen/dashboard" class="block hover:underline">Dashboard</a>
+      </li>
+      <li><a href="/contact" class="block hover:underline">Contact</a></li>
+      <li><a href="/about" class="block hover:underline">About</a></li>
+      <li>
+        <a href="/citizen/history" class="block hover:underline">My Requests</a>
+      </li>
+      <li><a href="/profile" class="block hover:underline">Profile</a></li>
+      <li>
+        <a href="/logout" class="block hover:underline text-red-200">Logout</a>
+      </li>
+    </ul>
+  </div>
 </nav>
+
+<script>
+  // Mobile toggle
+  document
+    .getElementById("citizen-menu-toggle")
+    .addEventListener("click", () => {
+      const menu = document.getElementById("citizen-mobile-menu");
+      menu.classList.toggle("hidden");
+    });
+
+  document
+    .getElementById("citizen-menu-close")
+    .addEventListener("click", () => {
+      const mobileMenu = document.getElementById("citizen-mobile-menu");
+      mobileMenu.classList.add("hidden");
+    });
+
+  // Notifications toggle
+  const notifBtn = document.getElementById("notif-btn");
+  const notifDropdown = document.getElementById("notif-dropdown");
+
+  notifBtn.addEventListener("click", () => {
+    notifDropdown.classList.toggle("hidden");
+  });
+
+  // Close notif dropdown when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!notifBtn.contains(e.target) && !notifDropdown.contains(e.target)) {
+      notifDropdown.classList.add("hidden");
+    }
+  });
+</script>

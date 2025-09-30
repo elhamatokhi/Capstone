@@ -1,14 +1,83 @@
-<nav class="bg-green-600 text-white p-4 flex justify-between items-center">
-  <h1 class="text-xl font-bold">Staff Portal</h1>
-  <ul class="flex space-x-6">
-    <li><a href="/staff/dashboard" class="hover:underline">Dashboard</a></li>
-    <li>
-      <a href="/staff/requests" class="hover:underline">Service Requests</a>
-    </li>
-    <li><a href="/contact" class="hover:underline">Contact</a></li>
-    <li><a href="/about" class="hover:underline">About</a></li>
-    <li><a href="/profile" class="hover:underline">Profile</a></li>
-    <li><a href="/staff/reports" class="hover:underline">Reports</a></li>
-    <li><a href="/logout" class="hover:underline text-red-200">Logout</a></li>
-  </ul>
+<nav class="bg-green-600 text-white p-4">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <!-- Title -->
+
+    <h1 class="text-xl font-bold">Staff Portal</h1>
+    <!-- Hamburger (visible on mobile only) -->
+    <button
+      id="menu-toggle"
+      class="sm:hidden focus:outline-none focus:ring-2 focus:ring-white rounded"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        ></path>
+      </svg>
+    </button>
+
+    <ul class="flex space-x-6 hidden sm:flex">
+      <li>
+        <a href="/staff/dashboard" class="hover:underline">Dashboard</a>
+      </li>
+      <li>
+        <a href="/staff/requests" class="hover:underline">Service Requests</a>
+      </li>
+      <li><a href="/contact" class="hover:underline">Contact</a></li>
+      <li><a href="/about" class="hover:underline">About</a></li>
+      <li><a href="/profile" class="hover:underline">Profile</a></li>
+      <li>
+        <a href="/logout" class="hover:underline text-red-200">Logout</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Mobile Dropdown -->
+  <div id="mobile-menu" class="sm:hidden hidden mt-4">
+    <ul
+      class="fixed inset-0 bg-green-700 bg-opacity-95 flex flex-col justify-center items-center space-y-6 text-xl z-40 gap-6"
+    >
+      <button
+        id="menu-close"
+        class="absolute top-4 right-6 text-white text-3xl"
+      >
+        &times;
+      </button>
+
+      <li>
+        <a href="/staff/dashboard" class="block hover:underline">Dashboard</a>
+      </li>
+      <li>
+        <a href="/staff/requests" class="block hover:underline"
+          >Service Requests</a
+        >
+      </li>
+      <li><a href="/contact" class="block hover:underline">Contact</a></li>
+      <li><a href="/about" class="block hover:underline">About</a></li>
+      <li><a href="/profile" class="block hover:underline">Profile</a></li>
+      <li>
+        <a href="/logout" class="block hover:underline text-red-200">Logout</a>
+      </li>
+    </ul>
+  </div>
 </nav>
+<script>
+  document.getElementById("menu-toggle").addEventListener("click", () => {
+    const menu = document.getElementById("mobile-menu");
+    const toggleBtn = document.getElementById("menu-toggle");
+    menu.classList.toggle("hidden");
+  });
+
+  document.getElementById("menu-close").addEventListener("click", () => {
+    const mobileMenu = document.getElementById("mobile-menu");
+    mobileMenu.classList.add("hidden");
+  });
+</script>

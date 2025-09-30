@@ -60,6 +60,7 @@ export const getAllRequests = async (req, res) => {
   const { requestId, status, username, service_name, startDate, endDate } =
     req.query;
 
+  console.log(role);
   try {
     let query = db("requests as r")
       .select(
@@ -97,7 +98,8 @@ export const getAllRequests = async (req, res) => {
     res.redirect(`/${role}/dashboard`);
   }
 };
-// getAll requests
+
+// getAll services
 export const getAllServices = async (req, res) => {
   const services = await fetchServices();
   res.render("admin/services", { services });

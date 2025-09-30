@@ -89,7 +89,7 @@ router.post(
 );
 
 // Request details page
-router.get("/requests/:id", getRequestDetails);
+// router.get("/requests/:id", getRequestDetails);
 
 // Get profile details of all users
 router.get("/profile", getProfile);
