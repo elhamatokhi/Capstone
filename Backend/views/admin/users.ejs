@@ -1,57 +1,89 @@
 <%- include("../partials/header", { title: "Users" }) %> <%-
 include("../partials/navbar-admin") %>
 
-<div class="max-w-8xl mx-auto p-6">
+<div class="overflow-x-auto rounded-lg shadow bg-white p-4 max-w-full">
   <h1 class="text-2xl font-bold mb-6">Users</h1>
 
   <% if (!users || users.length === 0) { %>
   <p class="text-gray-600">No users found.</p>
   <% } else { %>
-  <div class="overflow-x-auto">
-    <tbody class="block md:table-row-group divide-y divide-gray-200">
-      <% users.forEach(user => { %>
-      <tr
-        class="block mb-4 md:table-row hover:bg-gray-50 border md:border-none"
-      >
-        <td class="block md:table-cell px-4 py-2">
-          <span class="font-semibold md:hidden">ID: </span><%= user.id %>
-        </td>
-        <td class="block md:table-cell px-4 py-2">
-          <span class="font-semibold md:hidden">Name: </span><%= user.name %>
-        </td>
-        <td class="block md:table-cell px-4 py-2">
-          <span class="font-semibold md:hidden">Email: </span><%= user.email %>
-        </td>
-        <td class="block md:table-cell px-4 py-2 capitalize">
-          <span class="font-semibold md:hidden">Role: </span><%= user.role %>
-        </td>
-        <td class="block md:table-cell px-4 py-2">
-          <span class="font-semibold md:hidden">DOB: </span>
-          <%= user.date_of_birth ? new
-          Date(user.date_of_birth).toLocaleDateString() : "-" %>
-        </td>
-        <td class="block md:table-cell px-4 py-2">
-          <span class="font-semibold md:hidden">Gender: </span><%= user.gender
-          || "-" %>
-        </td>
-        <td class="block md:table-cell px-4 py-2">
-          <span class="font-semibold md:hidden">National ID: </span><%=
-          user.national_id || "-" %>
-        </td>
-        <td class="block md:table-cell px-4 py-2">
-          <span class="font-semibold md:hidden">Department: </span><%=
-          user.department_name || "-" %>
-        </td>
-        <td class="block md:table-cell px-4 py-2">
-          <span class="font-semibold md:hidden">Created At: </span><%= new
-          Date(user.created_at).toLocaleString() %>
-        </td>
-        <td class="block md:table-cell px-4 py-2">
-          <span class="font-semibold md:hidden">Updated At: </span><%= new
-          Date(user.updated_at).toLocaleString() %>
-        </td>
-        <td class="block md:table-cell px-4 py-2">
-          <div class="flex flex-wrap md:flex-nowrap gap-2">
+
+  <!-- Table container -->
+  <div
+    class="overflow-x-auto rounded-lg shadow hidden md:block bg-white p-4 max-w-full"
+  >
+    <!-- Table for md+ (scrollable on smaller desktops) -->
+    <table
+      class="w-full table-auto whitespace-nowrap break-words min-w-[900px]"
+    >
+      <thead class="bg-gray-50 border-b-2 border-gray-200">
+        <tr>
+          <th class="p-3 text-sm font-semibold tracking-wide text-left w-16">
+            ID
+          </th>
+          <th class="p-3 text-sm font-semibold tracking-wide text-left">
+            Name
+          </th>
+          <th class="p-3 text-sm font-semibold tracking-wide text-left">
+            Email
+          </th>
+          <th class="p-3 text-sm font-semibold tracking-wide text-left w-24">
+            Role
+          </th>
+          <th class="p-3 text-sm font-semibold tracking-wide text-left w-24">
+            DOB
+          </th>
+          <th class="p-3 text-sm font-semibold tracking-wide text-left w-20">
+            Gender
+          </th>
+          <th class="p-3 text-sm font-semibold tracking-wide text-left w-28">
+            National ID
+          </th>
+          <th class="p-3 text-sm font-semibold tracking-wide text-left">
+            Department
+          </th>
+          <th class="p-3 text-sm font-semibold tracking-wide text-left w-32">
+            Created At
+          </th>
+          <th class="p-3 text-sm font-semibold tracking-wide text-left w-32">
+            Updated At
+          </th>
+          <th class="p-3 text-sm font-semibold tracking-wide text-left w-28">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% users.forEach(user => { %>
+        <tr class="odd:bg-white even:bg-gray-50">
+          <td class="p-3 text-sm text-gray-700"><%= user.id %></td>
+          <td class="p-3 text-sm text-gray-700"><%= user.name %></td>
+          <td class="p-3 text-sm text-gray-700"><%= user.email %></td>
+          <td class="p-3 text-sm text-gray-700 capitalize">
+            <span
+              class="px-2 py-1 text-xs font-medium rounded-lg <%= user.role === 'admin' ? 'bg-red-200 text-red-800' : '' %> <%= user.role === 'staff' ? 'bg-green-200 text-green-800' : '' %> <%= user.role === 'citizen' ? 'bg-blue-200 text-blue-800' : '' %> uppercase"
+            >
+              <%= user.role %>
+            </span>
+          </td>
+          <td class="p-3 text-sm text-gray-700">
+            <%= user.date_of_birth ? new
+            Date(user.date_of_birth).toLocaleDateString() : "-" %>
+          </td>
+          <td class="p-3 text-sm text-gray-700"><%= user.gender || "-" %></td>
+          <td class="p-3 text-sm text-gray-700">
+            <%= user.national_id || "-" %>
+          </td>
+          <td class="p-3 text-sm text-gray-700">
+            <%= user.department_name || "-" %>
+          </td>
+          <td class="p-3 text-sm text-gray-500">
+            <%= new Date(user.created_at).toLocaleString() %>
+          </td>
+          <td class="p-3 text-sm text-gray-500">
+            <%= new Date(user.updated_at).toLocaleString() %>
+          </td>
+          <td class="p-3 text-sm">
             <form action="/admin/citizen/<%= user.id %>/delete" method="POST">
               <button
                 type="submit"
@@ -61,14 +93,77 @@ include("../partials/navbar-admin") %>
                 Remove
               </button>
             </form>
-          </div>
-        </td>
-      </tr>
-      <% }) %>
-    </tbody>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
   </div>
 
-  <% } %>
-</div>
+  <!-- Mobile cards (visible < sm) -->
+  <div class="grid grid-cols-1 gap-4 md:hidden mt-4">
+    <% users.forEach(user => { %>
+    <div class="bg-white p-4 rounded-lg shadow space-y-3">
+      <!-- Top Row: ID + Created -->
+      <div class="flex justify-between items-center">
+        <span class="text-sm text-gray-500">#<%= user.id %></span>
+        <span class="text-sm text-gray-400"
+          ><%= new Date(user.created_at).toLocaleDateString() %></span
+        >
+      </div>
 
-<%- include("../partials/footer") %>
+      <!-- Name & Email -->
+      <div>
+        <p class="font-semibold text-gray-800"><%= user.name %></p>
+        <p class="text-sm text-gray-600"><%= user.email %></p>
+      </div>
+
+      <!-- Role badge -->
+      <div>
+        <span
+          class="px-2 py-1 text-xs font-medium rounded-lg <%= user.role === 'admin' ? 'bg-red-200 text-red-800' : '' %> <%= user.role === 'staff' ? 'bg-green-200 text-green-800' : '' %> <%= user.role === 'citizen' ? 'bg-blue-200 text-blue-800' : '' %> uppercase"
+        >
+          <%= user.role %>
+        </span>
+      </div>
+
+      <!-- Other details -->
+      <div class="text-sm text-gray-700 space-y-1">
+        <p>
+          <span class="font-medium">DOB:</span> <%= user.date_of_birth ? new
+          Date(user.date_of_birth).toLocaleDateString() : "-" %>
+        </p>
+        <p>
+          <span class="font-medium">Gender:</span> <%= user.gender || "-" %>
+        </p>
+        <p>
+          <span class="font-medium">National ID:</span> <%= user.national_id ||
+          "-" %>
+        </p>
+        <p>
+          <span class="font-medium">Department:</span> <%= user.department_name
+          || "-" %>
+        </p>
+        <p>
+          <span class="font-medium">Updated:</span> <%= new
+          Date(user.updated_at).toLocaleDateString() %>
+        </p>
+      </div>
+
+      <!-- Actions -->
+      <div>
+        <form action="/admin/citizen/<%= user.id %>/delete" method="POST">
+          <button
+            type="submit"
+            class="bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-1 rounded shadow-sm transition"
+            onclick="return confirm('Are you sure you want to delete this user?')"
+          >
+            Remove
+          </button>
+        </form>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+</div>
+<% } %> <%- include("../partials/footer") %>
