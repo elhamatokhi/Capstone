@@ -2,43 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
       <%= formType === 'login' ? 'Login' : 'Register' %> | E-Government Services
     </title>
     <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-gray-100 flex flex-col min-h-screen">
-    <!-- Header -->
-    <header class="bg-blue-600 text-white py-4 shadow">
-      <div class="max-w-6xl mx-auto flex justify-between items-center px-4">
-        <h1 class="text-xl font-bold">
-          <%= formType === 'login' ? 'Login' : 'Register' %>
-        </h1>
-        <nav class="mt-2 sm:mt-0">
-          <a href="/" class="hover:underline text-sm sm:text-base">Home</a>
-        </nav>
-      </div>
-    </header>
 
-    <!-- Flash Messages -->
-    <div class="max-w-md mx-auto mt-4 w-full px-2 sm:px-0">
-      <% if (success_msg && success_msg.length > 0) { %>
-      <div
-        id="flash-success"
-        class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md mb-4"
-      >
-        <%= success_msg[0] %>
-      </div>
-      <% } %> <% if (error_msg && error_msg.length > 0) { %>
-      <div
-        id="flash-error"
-        class="bg-red-100 text-red-800 px-4 py-2 rounded-lg shadow-md mb-4"
-      >
-        <%= error_msg[0] %>
-      </div>
-      <% } %>
-    </div>
+    <link rel="stylesheet" href="/css/styles.css" />
 
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <script>
       setTimeout(function () {
         const success = document.getElementById("flash-success");
@@ -47,158 +25,141 @@
         if (error) error.style.display = "none";
       }, 2000);
     </script>
+  </head>
 
-    <!-- Main content -->
-    <div class="flex flex-grow flex-col items-center justify-center p-8 h-full">
-      <!-- Heading -->
-      <h1 class="text-3xl font-bold mb-6 text-center">Your E-Government!</h1>
+  <body
+    class="bg-gradient-to-r from-[#F28383] from-10% via-[#9D6CD2] via-30% to-[#481EDC] to-90% flex items-center justify-center min-h-screen"
+  >
+    <div
+      class="max-w-[960px] grid grid-cols-1 md:grid-cols-2 items-center gap-10 p-6 rounded-2xl bg-black/70"
+    >
+      <!-- Left side (optional image / illustration) -->
+      <div class="hidden md:flex relative items-center justify-center">
+        <img src="/images/signup-background.svg" alt="" class="w-full h-auto" />
+        <img src="/images/teamwork.svg" alt="" class="absolute top-36 w-3/4" />
+      </div>
 
-      <!-- Main content -->
-      <main class="bg-white shadow-lg rounded-xl p-4 sm:p-6 md:p-8 w-1/2">
-        <!-- Google login -->
-        <a
-          href="/auth/google"
-          class="flex items-center justify-center gap-2 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition mb-4"
-        >
-          <img
-            src="https://www.svgrepo.com/show/355037/google.svg"
-            alt="Google"
-            class="w-5 h-5"
-          />
-          <span>Continue with Google</span>
-        </a>
-
-        <!-- Dynamic heading -->
-        <h1 class="text-3xl font-bold mb-6">
-          <%= formType === 'login' ? 'Welcome Back!' : 'Create Your Account' %>
+      <!-- Right side (Form) -->
+      <div class="max-w-md mx-auto text-white space-y-6">
+        <h1 class="text-5xl font-bold">
+          <%= formType === 'login' ? 'Login' : 'Register' %>
         </h1>
+        <p class="text-gray-300">
+          Access government services securely and conveniently.
+        </p>
 
-        <% if (formType === 'login') { %>
-        <!-- Login form -->
-        <form action="/login" method="POST" class="space-y-4">
-          <div>
-            <label for="email" class="block font-semibold">Email</label>
+        <% if (success_msg && success_msg.length > 0) { %>
+        <div
+          class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md mb-4"
+        >
+          <%= success_msg[0] %>
+        </div>
+        <% } %> <% if (error_msg && error_msg.length > 0) { %>
+        <div
+          class="bg-red-100 text-red-800 px-4 py-2 rounded-lg shadow-md mb-4"
+        >
+          <%= error_msg[0] %>
+        </div>
+        <% } %>
+
+        <form
+          action="<%= formType === 'login' ? '/login' : '/register' %>"
+          method="POST"
+          class="space-y-6"
+        >
+          <div class="relative">
+            <div
+              class="absolute top-2 left-2 bg-white/30 rounded-full p-2 flex items-center justify-center text-blue-300"
+            >
+              <i class="fa-solid fa-envelope-open"></i>
+            </div>
             <input
               type="email"
-              id="email"
               name="email"
+              placeholder="Email Address"
               required
-              class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full bg-white/20 py-3 px-12 rounded-full placeholder-gray-200 focus:bg-black/70 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:drop-shadow-lg text-white"
             />
           </div>
 
-          <div>
-            <label for="password" class="block font-semibold">Password</label>
+          <% if (formType === 'register') { %>
+          <div class="relative">
+            <div
+              class="absolute top-2 left-2 bg-white/30 rounded-full p-2 flex items-center justify-center text-blue-300"
+            >
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              required
+              class="w-full bg-white/20 py-3 px-12 rounded-full placeholder-gray-200 focus:bg-black/70 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:drop-shadow-lg text-white"
+            />
+          </div>
+          <% } %>
+
+          <div class="relative">
+            <div
+              class="absolute top-2 left-2 bg-white/30 rounded-full p-2 flex items-center justify-center text-blue-300"
+            >
+              <i class="fa-solid fa-lock"></i>
+            </div>
             <input
               type="password"
-              id="password"
               name="password"
+              placeholder="Password"
               required
-              class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="w-full bg-white/20 py-3 px-12 rounded-full placeholder-gray-200 focus:bg-black/70 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:drop-shadow-lg text-white"
             />
           </div>
 
+          <% if (formType === 'register') { %>
+          <div class="relative">
+            <div
+              class="absolute top-2 left-2 bg-white/30 rounded-full p-2 flex items-center justify-center text-blue-300"
+            >
+              <i class="fa-solid fa-calendar"></i>
+            </div>
+            <input
+              type="date"
+              name="date_of_birth"
+              required
+              class="w-full bg-white/20 py-3 px-12 rounded-full placeholder-gray-200 focus:bg-black/70 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:drop-shadow-lg text-white"
+            />
+          </div>
+          <% } %>
+
           <button
             type="submit"
-            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+            class="w-full bg-gradient-to-r from-blue-400 to-cyan-200 font-semibold rounded-full py-3 text-black hover:from-blue-500 hover:to-cyan-300 transition"
           >
-            Login
+            <%= formType === 'login' ? 'Login' : 'Register' %>
           </button>
+        </form>
 
-          <p class="text-sm text-gray-600">
+        <div
+          class="text-gray-300 border-t border-white/30 pt-4 text-sm space-y-2"
+        >
+          <% if (formType === 'login') { %>
+          <p>
             Don’t have an account?
-            <a href="/register" class="text-blue-600 hover:underline"
-              >Register</a
+            <a href="/register" class="text-blue-400 font-semibold">Register</a>
+          </p>
+          <p>
+            Forgot password?
+            <a href="/reset-password" class="text-blue-400 font-semibold"
+              >Reset password</a
             >
           </p>
-        </form>
-
-        <% } else { %>
-        <!-- Register form -->
-        <form action="/register" method="POST" class="space-y-4">
-          <div class="space-y-4 border-t pt-4">
-            <div>
-              <label for="name" class="block font-semibold">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label for="email" class="block font-semibold">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="you@example.com"
-                required
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label for="password" class="block font-semibold">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                required
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label for="date_of_birth" class="block font-semibold"
-                >Date of Birth</label
-              >
-              <input
-                type="date"
-                id="date_of_birth"
-                name="date_of_birth"
-                required
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label for="national_id" class="block font-semibold"
-                >National ID</label
-              >
-              <input
-                type="text"
-                id="national_id"
-                name="national_id"
-                placeholder="H13323424"
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-          >
-            Register
-          </button>
-
-          <p class="text-sm text-gray-600">
+          <% } else { %>
+          <p>
             Already have an account?
-            <a href="/login" class="text-blue-600 hover:underline">Login</a>
+            <a href="/login" class="text-blue-400 font-semibold">Login</a>
           </p>
-        </form>
-        <% } %>
-      </main>
+          <% } %>
+        </div>
+      </div>
     </div>
-
-    <!-- Footer -->
-    <footer
-      class="bg-gray-200 text-center py-4 mt-auto text-xs sm:text-sm text-gray-600"
-    >
-      <p>&copy; 2025 E-Government Services</p>
-    </footer>
   </body>
 </html>
