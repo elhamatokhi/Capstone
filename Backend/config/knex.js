@@ -12,8 +12,8 @@ export const db = knex({
     database: process.env.DB_NAME,
     port: process.env.DB_PORT,
     ssl: {
-      rejectUnauthorized: false, // use true if you have a proper CA cert
+      rejectUnauthorized: false,
     },
   },
-  pool: { min: 0, max: 10 }, // Connection pool settings
+  pool: { min: 0, max: 10 },
 });
