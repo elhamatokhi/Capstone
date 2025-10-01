@@ -14,7 +14,7 @@ The E-Government Citizen Services Portal is a web application that enables citiz
 - 💰 Payment Simulation: Fake payment success page for fee-based services
 - 🔍 Search & Filter: By name, request ID, status, service type, and date
 - 🔔 Notifications: Citizens notified when request status changes
-- 📊 Reports & Statistics: Admins can view request counts, approvals/rejections, and fees collected
+- 📊 Reports & Statistics: Admins can view request counts,and approvals/rejections
 - 🏢 Multi-department support: Each department sees only its requests; admin sees all
 - 🌐 Responsive design using EJS templates and Tailwind CSS
 
@@ -50,7 +50,7 @@ DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=e_gov_portal
+DB_NAME=your_db_name
 SESSION_SECRET=your_secret_key
 PORT=3000
 ```
