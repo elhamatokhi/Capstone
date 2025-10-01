@@ -37,10 +37,13 @@ export const postContact = async (req, res) => {
 export const getAbout = async (req, res) => {
   const notifications = await fetchNotifications(req.user.id);
   const unreadCount = notifications.filter((n) => !n.is_read).length;
+  const role = req.user.role;
+  console.log(role);
 
   res.render(`about`, {
     navbarPartial: `../views/partials/navbar-${req.user.role}`,
     notifications,
     unreadCount,
+    role,
   });
 };
