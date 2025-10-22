@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      <%= formType === 'login' ? 'Login' : 'Register' %> | E-Government Services
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="/css/styles.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script>
+      setTimeout(function () {
+        const success = document.getElementById("flash-success");
+        const error = document.getElementById("flash-error");
+        if (success) success.style.display = "none";
+        if (error) error.style.display = "none";
+      }, 2000);
+    </script>
+  </head>
+
+  <body
+    class="bg-gradient-to-r from-[#F28383] from-10% via-[#9D6CD2] via-30% to-[#481EDC] to-90% flex items-center justify-center min-h-screen"
+  >
+    <div
+      class="max-w-[960px] grid grid-cols-1 md:grid-cols-2 items-center gap-10 p-6 rounded-2xl bg-black/70"
+    >
+      <!-- Left side (optional image / illustration) -->
+      <div class="hidden md:flex relative items-center justify-center">
+        <img src="/images/signup-background.svg" alt="" class="w-full h-auto" />
+        <img src="/images/teamwork.svg" alt="" class="absolute top-36 w-3/4" />
+      </div>
+
+      <!-- Right side (Form) -->
+      <div class="max-w-md mx-auto text-white space-y-6">
+        <h1 class="text-5xl font-bold">
+          <%= formType === 'login' ? 'Login' : 'Register' %>
+        </h1>
+        <p class="text-gray-300">
+          Access government services securely and conveniently.
+        </p>
+
+        <% if (success_msg && success_msg.length > 0) { %>
+        <div
+          class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md mb-4"
+        >
+          <%= success_msg[0] %>
+        </div>
+        <% } %> <% if (error_msg && error_msg.length > 0) { %>
+        <div
+          class="bg-red-100 text-red-800 px-4 py-2 rounded-lg shadow-md mb-4"
+        >
+          <%= error_msg[0] %>
+        </div>
+        <% } %>
+
+        <form
+          action="<%= formType === 'login' ? '/login' : '/register' %>"
+          method="POST"
+          class="space-y-6"
+        >
+          <div class="relative">
+            <div
+              class="absolute top-2 left-2 bg-white/30 rounded-full p-2 flex items-center justify-center text-blue-300"
+            >
+              <i class="fa-solid fa-envelope-open"></i>
+            </div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email Address"
+              required
+              class="w-full bg-white/20 py-3 px-12 rounded-full placeholder-gray-200 focus:bg-black/70 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:drop-shadow-lg text-white"
+            />
+          </div>
+
+          <% if (formType === 'register') { %>
+          <div class="relative">
+            <div
+              class="absolute top-2 left-2 bg-white/30 rounded-full p-2 flex items-center justify-center text-blue-300"
+            >
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              required
+              class="w-full bg-white/20 py-3 px-12 rounded-full placeholder-gray-200 focus:bg-black/70 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:drop-shadow-lg text-white"
+            />
+          </div>
+          <% } %>
+
+          <div class="relative">
+            <div
+              class="absolute top-2 left-2 bg-white/30 rounded-full p-2 flex items-center justify-center text-blue-300"
+            >
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              required
+              class="w-full bg-white/20 py-3 px-12 rounded-full placeholder-gray-200 focus:bg-black/70 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:drop-shadow-lg text-white"
+            />
+          </div>
+
+          <% if (formType === 'register') { %>
+          <div class="relative">
+            <div
+              class="absolute top-2 left-2 bg-white/30 rounded-full p-2 flex items-center justify-center text-blue-300"
+            >
+              <i class="fa-solid fa-calendar"></i>
+            </div>
+            <input
+              type="date"
+              name="date_of_birth"
+              required
+              class="w-full bg-white/20 py-3 px-12 rounded-full placeholder-gray-200 focus:bg-black/70 focus:outline-none focus:ring-1 focus:ring-blue-400 focus:drop-shadow-lg text-white"
+            />
+          </div>
+          <% } %>
+
+          <button
+            type="submit"
+            class="w-full bg-gradient-to-r from-blue-400 to-cyan-200 font-semibold rounded-full py-3 text-black hover:from-blue-500 hover:to-cyan-300 transition"
+          >
+            <%= formType === 'login' ? 'Login' : 'Register' %>
+          </button>
+        </form>
+
+        <div
+          class="text-gray-300 border-t border-white/30 pt-4 text-sm space-y-2"
+        >
+          <% if (formType === 'login') { %>
+          <p>
+            Don’t have an account?
+            <a href="/register" class="text-blue-400 font-semibold">Register</a>
+          </p>
+
+          <% } else { %>
+          <p>
+            Already have an account?
+            <a href="/login" class="text-blue-400 font-semibold">Login</a>
+          </p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

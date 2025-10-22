@@ -1,0 +1,133 @@
+<%- include("../partials/header", { title: "Departments" }) %>
+<%- include("../partials/navbar-admin") %>
+
+<% if (success_msg && success_msg.length > 0) { %>
+  <div
+    id="flash-success"
+    class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md mb-4"
+  >
+    <%= success_msg[0] %>
+  </div>
+<% } %>
+<script>
+  setTimeout(() => {
+    const flash = document.getElementById("flash-success");
+    if (flash) flash.style.display = "none";
+  }, 2000);
+</script>
+<div class="max-w-7xl mx-auto flex-grow p-6">
+  <h1 class="text-2xl font-bold mb-6">Departments</h1>
+
+  <% if (departments.length === 0) { %>
+    <p class="text-gray-600">No departments found.</p>
+  <% } else { %>
+    <!-- Grid: 1 column on small, 2-3 on medium/large screens -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% departments.forEach(d => { %>
+        <div class="bg-white shadow rounded-lg p-4 space-y-4">
+          
+          <!-- Department Header -->
+          <div class="flex justify-between items-center mb-2">
+            <h2 class="text-lg font-semibold"><%= d.name %></h2>
+            <span class="text-gray-500">ID: <%= d.id %></span>
+          </div>
+
+          <!-- Department Head -->
+          <div>
+            <h3 class="font-semibold mb-1">Department Head</h3>
+            <% const head = d.staff.find(st => st.role === 'department_head'); %>
+            <p class="text-gray-700">
+              <%= head ? `${head.name} (${head.email})` : "No department head assigned." %>
+            </p>
+
+            <!-- Assign new head -->
+            <form action="/admin/departments/<%= d.id %>/head" method="POST" class="mt-2 flex items-center gap-2">
+              <select name="staffId" class="border rounded px-2 py-1 w-full sm:w-48 max-w-full truncate">
+                <% d.staff.forEach(st => { %>
+                  <option value="<%= st.id %>" <%= st.role === 'head' ? 'selected' : '' %>>
+                    <%= st.name %> - <%= st.role %>
+                  </option>
+                <% }) %>
+              </select>
+              <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                Assign Head
+              </button>
+            </form>
+          </div>
+
+          <!-- Services -->
+          <div>
+            <h3 class="font-semibold mb-1">Services</h3>
+            <% if (d.services && d.services.length > 0) { %>
+              <ul class="list-disc list-inside text-gray-700 space-y-1">
+                <% d.services.forEach(s => { %>
+                  <li class="flex justify-between items-center">
+                    <span><%= s.name %> - $<%= s.fee %></span>
+                    <form action="/admin/services/<%= s.id %>/delete" method="POST" class="inline"
+                          onsubmit="return confirm('Are you sure you want to delete this service?');">
+                      <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Remove</button>
+                    </form>
+                  </li>
+                <% }) %>
+              </ul>
+            <% } else { %>
+              <p class="text-gray-500">No services available.</p>
+            <% } %>
+
+            <!-- Add Service Form -->
+            <fieldset class="border rounded-lg p-4 mt-2 border-gray-400 border-opacity-30">
+              <legend class="px-2 text-gray-700 font-semibold text-sm">
+                Add New Service
+              </legend>
+
+              <form action="/admin/services/add" method="POST" class="flex flex-wrap gap-2 items-center mt-2">
+                <input type="hidden" name="department_id" value="<%= d.id %>" />
+
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Service Name"
+                  class="border rounded px-2 py-1 flex-1 min-w-[120px]"
+                  required
+                />
+
+                <input
+                  type="number"
+                  name="fee"
+                  placeholder="Fee"
+                  class="border rounded px-2 py-1 w-24"
+                  required
+                />
+
+                <button
+                  type="submit"
+                  class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                >
+                  + Add Service
+                </button>
+              </form>
+            </fieldset>
+
+          </div>
+
+          <!-- Staff -->
+          <div>
+            <h3 class="font-semibold mb-1">Staff</h3>
+            <% if (d.staff && d.staff.length > 0) { %>
+              <ul class="list-disc list-inside text-gray-700 space-y-1">
+                <% d.staff.forEach(st => { %>
+                  <li><%= st.name %> - <%= st.role %> (<%= st.email %>)</li>
+                <% }) %>
+              </ul>
+            <% } else { %>
+              <p class="text-gray-500">No staff assigned.</p>
+            <% } %>
+          </div>
+
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<%- include("../partials/footer") %>

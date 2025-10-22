@@ -1,0 +1,38 @@
+import { Router } from "express";
+import { ensureAuthenticated, requireRoles } from "../middleware/middleware.js";
+import {
+  services,
+  requestService,
+  submitRequest,
+  getHistory,
+  deleteRequest,
+  getDashboard,
+} from "../controllers/dashboard/citizenDashboard.js";
+
+import { markNotificationAsRead } from "../controllers/requestContoller.js";
+
+import { upload } from "../middleware/multerConfig.js";
+
+const citizenRouter = Router();
+
+citizenRouter.use(requireRoles("citizen"));
+
+/**--------------------------Citizen routes------------------------ */ //
+
+// Citizen Dashboard
+citizenRouter.get("/dashboard", services, getDashboard);
+
+// Citizen request
+citizenRouter.get("/request/:serviceId", requestService);
+citizenRouter.post("/delete/:requestId", deleteRequest);
+citizenRouter.post(
+  "/request/:serviceId",
+  upload.array("documents", 10),
+  submitRequest
+);
+citizenRouter.post("/notifications/:id/read", markNotificationAsRead);
+
+// Citizen request history
+citizenRouter.get("/history", getHistory);
+
+export default citizenRouter;

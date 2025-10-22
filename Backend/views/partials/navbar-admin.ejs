@@ -1,0 +1,102 @@
+<nav class="bg-indigo-600 text-white p-4">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <!-- Title -->
+    <h1 class="text-xl font-bold">Admin Portal</h1>
+
+    <!-- Hamburger (visible on mobile only) -->
+    <button
+      id="menu-toggle"
+      class="sm:hidden focus:outline-none focus:ring-2 focus:ring-white rounded"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        ></path>
+      </svg>
+    </button>
+
+    <!-- Desktop Menu -->
+    <ul class="hidden sm:flex space-x-6">
+      <li><a href="/admin/dashboard" class="hover:underline">Dashboard</a></li>
+      <li>
+        <a href="/admin/departments" class="hover:underline"
+          >Manage Departments</a
+        >
+      </li>
+      <li><a href="/admin/staff" class="hover:underline">Manage Staff</a></li>
+      <li>
+        <a href="/admin/services" class="hover:underline">Manage Services</a>
+      </li>
+      <li>
+        <a href="/admin/requests" class="hover:underline">Manage Requests</a>
+      </li>
+      <li><a href="/profile" class="hover:underline">Profile</a></li>
+      <li><a href="/logout" class="hover:underline text-red-200">Logout</a></li>
+      <li><a href="/admin/users" class="hover:underline">Users</a></li>
+    </ul>
+  </div>
+
+  <!-- Mobile Dropdown -->
+  <div id="mobile-menu" class="sm:hidden hidden mt-4">
+    <ul
+      class="fixed inset-0 bg-indigo-700 bg-opacity-95 flex flex-col justify-center items-center space-y-6 text-xl z-40 gap-6"
+    >
+      <button
+        id="menu-close"
+        class="absolute top-4 right-6 text-white text-3xl"
+      >
+        &times;
+      </button>
+
+      <li>
+        <a href="/admin/dashboard" class="block hover:underline">Dashboard</a>
+      </li>
+      <li>
+        <a href="/admin/departments" class="block hover:underline"
+          >Manage Departments</a
+        >
+      </li>
+      <li>
+        <a href="/admin/staff" class="block hover:underline">Manage Staff</a>
+      </li>
+      <li>
+        <a href="/admin/services" class="block hover:underline"
+          >Manage Services</a
+        >
+      </li>
+      <li>
+        <a href="/admin/requests" class="block hover:underline"
+          >Manage Requests</a
+        >
+      </li>
+      <li><a href="/profile" class="block hover:underline">Profile</a></li>
+      <li>
+        <a href="/logout" class="block hover:underline text-red-200">Logout</a>
+      </li>
+      <li><a href="/admin/users" class="block hover:underline">Users</a></li>
+    </ul>
+  </div>
+</nav>
+
+<script>
+  // Mobile toggle
+  document.getElementById("menu-toggle").addEventListener("click", () => {
+    const menu = document.getElementById("mobile-menu");
+    const toggleBtn = document.getElementById("menu-toggle");
+    menu.classList.toggle("hidden");
+  });
+
+  document.getElementById("menu-close").addEventListener("click", () => {
+    const mobileMenu = document.getElementById("mobile-menu");
+    mobileMenu.classList.add("hidden");
+  });
+</script>

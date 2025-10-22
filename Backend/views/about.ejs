@@ -1,0 +1,59 @@
+<%- include('./partials/header', { title: "About" }) %> <%-
+include(navbarPartial) %>
+<script>
+  const btn = document.getElementById("notif-btn");
+  const dropdown = document.getElementById("notif-dropdown");
+
+  btn.addEventListener("click", () => {
+    dropdown.classList.toggle("hidden");
+  });
+
+  // Optional: close dropdown if clicked outside
+  window.addEventListener("click", (e) => {
+    if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.add("hidden");
+    }
+  });
+</script>
+<div
+  class="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8 bg-white shadow rounded-lg mb-4 mt-4 sm:mt-6 lg:mt-8"
+>
+  <a
+    href="/<%= role %>/dashboard"
+    class="block text-blue-600 text-lg sm:text-xl lg:text-2xl underline mb-4"
+    >Back</a
+  >
+  <h1
+    class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 pt-2 text-blue-700"
+  >
+    About Our Citizen Services Portal
+  </h1>
+  <p class="mb-4 text-gray-700">
+    Welcome to the Citizen Services Portal, your one-stop platform for accessing
+    and managing public services online. Our mission is to make government
+    services more accessible, transparent, and efficient for everyone.
+  </p>
+  <h2 class="text-xl sm:text-2xl font-semibold mb-2 text-blue-600">Features</h2>
+  <ul class="list-disc pl-6 mb-4 text-gray-700 space-y-2">
+    <li>Browse and request a variety of government services</li>
+    <li>Track the status of your service requests</li>
+    <li>Secure online payments for paid services</li>
+    <li>Manage your personal profile and history</li>
+    <li>Receive timely notifications and updates</li>
+  </ul>
+  <h2 class="text-xl font-semibold mb-2 text-blue-600">Our Vision</h2>
+  <p class="mb-4 text-gray-700">
+    We aim to empower citizens by providing a seamless digital experience for
+    interacting with government agencies. Your feedback helps us improve and
+    deliver better services.
+  </p>
+  <h2 class="text-xl font-semibold mb-2 text-blue-600">Contact Us</h2>
+  <p class="text-gray-700">
+    For support or inquiries, please email us at
+    <a href="mailto:support@citizenportal.com" class="text-blue-600 underline"
+      >support@citizenportal.com</a
+    >.
+  </p>
+</div>
+
+<%- include('./partials/footer') %>

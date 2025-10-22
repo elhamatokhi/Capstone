@@ -1,0 +1,56 @@
+<%- include('../partials/header', { title: "Dashboard" }) %> <%-
+include('../partials/navbar-citizen.ejs') %> <% if (success_msg &&
+success_msg.length > 0) { %>
+
+<div
+  id="flash-success"
+  class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md"
+>
+  <%= success_msg[0] %>
+</div>
+<% } %>
+<script>
+  setTimeout(function () {
+    const flash = document.getElementById("flash-success");
+    if (flash) flash.style.display = "none";
+  }, 3000);
+
+  const btn = document.getElementById("notif-btn");
+  const dropdown = document.getElementById("notif-dropdown");
+
+  btn.addEventListener("click", () => {
+    dropdown.classList.toggle("hidden");
+  });
+
+  // Optional: close dropdown if clicked outside
+  window.addEventListener("click", (e) => {
+    if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.add("hidden");
+    }
+  });
+</script>
+
+<div class="max-w-5xl mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-4">Available Services</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% if (services && services.length) { %> <% services.forEach(service => { %>
+    <div class="p-4 bg-white shadow rounded-lg">
+      <h3 class="text-lg font-semibold"><%= service.name %></h3>
+      <p class="text-sm text-gray-600"><%= service.description %></p>
+      <% if(service.fee > 0) { %>
+      <p class="mt-2 text-red-600 font-bold">Fee: $<%= service.fee %></p>
+      <% } else { %>
+      <p class="mt-2 text-green-600 font-semibold">Free</p>
+      <% } %>
+      <a
+        href="/citizen/request/<%= service.id %>"
+        class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Request
+      </a>
+    </div>
+    <% }) %> <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,68 @@
+<%- include('../partials/header', { title: "Admin Dashboard" }) %> <%-
+include('../partials/navbar-admin') %> <% if (error_msg && error_msg.length > 0)
+{ %>
+
+<div
+  id="flash-error"
+  class="bg-red-100 text-green-800 px-4 py-2 rounded-lg shadow-md"
+>
+  <%= error_msg[0] %>
+</div>
+<% } %>
+<script>
+  setTimeout(() => {
+    const flash = document.getElementById("flash-error");
+    if (flash) flash.style.display = "none";
+  }, 2000);
+</script>
+
+<div class="max-w-6xl mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-6">Welcome, <%= user.name %></h2>
+
+  <!-- Top Cards: Services / Requests / Users -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <a href="/admin/services">
+      <div class="p-4 bg-white shadow rounded-lg hover:shadow-md transition">
+        <h3 class="font-semibold">Services</h3>
+        <p class="text-2xl font-bold"><%= services.length %></p>
+        <p class="text-gray-500 mt-1">Manage all available services here.</p>
+      </div>
+    </a>
+
+    <a href="/admin/requests">
+      <div class="p-4 bg-white shadow rounded-lg hover:shadow-md transition">
+        <h3 class="font-semibold">Requests</h3>
+        <p class="text-2xl font-bold"><%= requests.length %></p>
+        <p class="text-gray-500 mt-1">Review and track citizen requests.</p>
+      </div>
+    </a>
+
+    <a href="/admin/users">
+      <div class="p-4 bg-white shadow rounded-lg hover:shadow-md transition">
+        <h3 class="font-semibold">Users</h3>
+        <p class="text-2xl font-bold"><%= users.length %></p>
+        <p class="text-gray-500 mt-1">View and manage registered users.</p>
+      </div>
+    </a>
+  </div>
+
+  <!-- Department Request Counts -->
+  <h3 class="text-xl font-bold mt-10 mb-4">Requests by Department</h3>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <% deptCounts.forEach(dept => { %>
+    <div class="bg-white shadow rounded-lg p-4 hover:shadow-md transition">
+      <h4 class="text-lg font-semibold text-gray-700">
+        <%= dept.department_name %>
+      </h4>
+      <p class="text-gray-500 mt-1">
+        Requests:
+        <span class="font-bold"><%= dept.request_count %></span> Approved:
+        <span class="font-bold text-green-600"><%= dept.approved_count %></span>
+        | Rejected:
+        <span class="font-bold text-red-600"><%= dept.rejected_count %></span>
+      </p>
+    </div>
+    <% }) %>
+  </div>
+</div>
+<%- include('../partials/footer') %>

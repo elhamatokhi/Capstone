@@ -1,0 +1,103 @@
+<%- include('../partials/header', { title: "Admin Dashboard" }) %> <%-
+include('../partials/navbar-admin') %>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+  <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">Edit Staff Member</h1>
+
+    <form
+      action="/admin/staff/<%= staff.id %>/edit"
+      method="POST"
+      class="space-y-4"
+    >
+      <!-- Name -->
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700"
+          >Name</label
+        >
+        <input
+          type="text"
+          name="name"
+          id="name"
+          value="<%= staff.name %>"
+          required
+          class="w-full p-2 border rounded"
+        />
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700"
+          >Email</label
+        >
+        <input
+          type="email"
+          name="email"
+          id="email"
+          value="<%= staff.email %>"
+          required
+          class="w-full p-2 border rounded"
+        />
+      </div>
+
+      <!-- Role -->
+      <div>
+        <label for="role" class="block text-sm font-medium text-gray-700"
+          >Role</label
+        >
+        <input
+          type="text"
+          name="role"
+          id="role"
+          value="<%= staff.role %>"
+          required
+          class="w-full p-2 border rounded"
+        />
+      </div>
+      <!-- Role -->
+      <div>
+        <label for="role" class="block text-sm font-medium text-gray-700"
+          >Password</label
+        >
+        <input
+          type="text"
+          name="password"
+          id="password"
+          value="<%= staff.password %>"
+          required
+          class="w-full p-2 border rounded"
+        />
+      </div>
+      <!-- Role -->
+      <div>
+        <label for="role" class="block text-sm font-medium text-gray-700"
+          >Department ID</label
+        >
+        <input
+          type="text"
+          name="department_id"
+          id="department_id"
+          value="<%= staff.department_id %>"
+          required
+          class="w-full p-2 border rounded"
+        />
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-between mt-6">
+        <a
+          href="/admin/staff"
+          class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+        >
+          Cancel
+        </a>
+        <button
+          type="submit"
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+  <%- include('../partials/footer') %>
+</body>

@@ -1,0 +1,34 @@
+<%- include('../partials/header', { title: "Payment Success" }) %>
+
+<div class="max-w-xl mx-auto p-8 bg-white shadow rounded-lg mt-8">
+  <% if (success_msg && success_msg.length > 0) { %>
+  <div class="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md mb-4">
+    <%= success_msg[0] %>
+  </div>
+  <% } %>
+
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-green-600 mb-4">Payment Successful!</h1>
+    <p class="mb-4 text-gray-700">
+      Thank you <%= payment.userName %> ! for your payment. Here are your
+      payment details:
+    </p>
+    <p class="text-gray-700 mb-2">
+      Transaction ID: <strong><%= payment.transactionId %></strong>
+    </p>
+    <p class="text-gray-700 mb-2">
+      Amount: <strong><%= payment.currency %> <%= payment.amount %></strong>
+    </p>
+    <p class="text-gray-700 mb-2">
+      Payment Method: <strong><%= payment.paymentMethod %></strong>
+    </p>
+    <p class="text-gray-500 text-sm mb-6">Date: <%= payment.date %></p>
+    <a
+      href="/citizen/history"
+      class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+      >Back to My Requests</a
+    >
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,208 @@
+import pool from "../../config/db.js";
+import { db } from "../../config/knex.js";
+import { fetchNotifications } from "../requestContoller.js";
+
+// Dashboard
+export const getDashboard = async (req, res) => {
+  try {
+    // Fetch notifications
+
+    const notifications = await fetchNotifications(req.user.id);
+    const unreadCount = notifications.filter((n) => !n.is_read).length;
+
+    res.render(`citizen/dashboard`, {
+      user: req.user,
+      services: req.servicesList, // coming from services middleware
+      notifications,
+      unreadCount,
+    });
+  } catch (error) {
+    console.error("Error loading dashboard:", error);
+    req.flash("error_msg", "Failed to load dashboard.");
+    res.redirect("/");
+  }
+};
+
+// Services a citizen can request
+export const services = async (req, res, next) => {
+  try {
+    const result = await pool.query(`SELECT * FROM services`);
+    req.servicesList = result.rows;
+    next();
+  } catch (error) {
+    console.log(`Error fetching services: `, error);
+    res.status(500).send("Internal server error.");
+  }
+};
+
+// Get a request
+export const requestService = async (req, res) => {
+  try {
+    const serviceId = parseInt(req.params.serviceId, 10);
+    const notifications = await fetchNotifications(req.user.id);
+    const unreadCount = notifications.filter((n) => !n.is_read).length;
+
+    if (isNaN(serviceId)) {
+      return res.redirect("/citizen/dashboard");
+    }
+
+    const fieldsResult = await pool.query(
+      `SELECT name,type,label,required, options FROM service_fields WHERE service_id = $1`,
+      [serviceId]
+    );
+
+    const fields = fieldsResult.rows;
+    res.render("citizen/request", {
+      fields,
+      serviceId,
+      notifications,
+      unreadCount,
+    });
+  } catch (error) {
+    console.log(`Error fetching services: `, error);
+    res.status(500).send("Internal server error.");
+  }
+};
+
+// POST a new request
+export const submitRequest = async (req, res) => {
+  try {
+    const serviceId = req.params.serviceId;
+    const userId = req.user.id;
+    const { note } = req.body;
+
+    // Save request in DB
+    const result = await pool.query(
+      `INSERT INTO requests (user_id, service_id,comments) VALUES ($1, $2,$3) RETURNING id`,
+      [userId, serviceId, note]
+    );
+
+    const requestId = result.rows[0].id; //  get request ID
+
+    // Handle dynamic fields
+    const ignoreKeys = [
+      "serviceId",
+      "comments",
+      "name",
+      "national_id",
+      "dob",
+      "email",
+      "note",
+    ];
+
+    const dynamicFields = Object.entries(req.body).filter(
+      ([key]) => !ignoreKeys.includes(key)
+    );
+
+    for (const [fieldName, value] of dynamicFields) {
+      const fieldResult = await pool.query(
+        "SELECT id FROM service_fields WHERE service_id = $1 AND name = $2",
+        [serviceId, fieldName]
+      );
+
+      if (fieldResult.rows.length === 0) continue;
+
+      const fieldId = fieldResult.rows[0].id;
+
+      // Insert into request fields
+      await pool.query(
+        "INSERT INTO request_fields (request_id, field_id, value) VALUES ($1, $2, $3)",
+        [requestId, fieldId, value]
+      );
+    }
+
+    // Handle uploaded files
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        // Map MIME to enum value
+        let fileType;
+        if (file.mimetype === "application/pdf") {
+          fileType = "pdf";
+        } else if (file.mimetype === "image/jpeg") {
+          fileType = "jpg";
+        } else {
+          throw new Error(`Unsupported file type: ${file.mimetype}`);
+        }
+
+        await pool.query(
+          `INSERT INTO documents (request_id, file_path, file_type, uploaded_at)
+           VALUES ($1, $2, $3, NOW())`,
+          [requestId, `uploads/${file.filename}`, fileType]
+        );
+      }
+    }
+
+    req.flash("success_msg", "Your request was submitted successfully!");
+    res.redirect("/citizen/dashboard");
+  } catch (err) {
+    console.error("Error submitting request:", err);
+    res.status(500).send("Something went wrong");
+  }
+};
+
+// Delete a request
+export const deleteRequest = async (req, res) => {
+  const requestId = req.params.requestId;
+  const userId = req.user.id;
+  try {
+    // Check if the request exists and belongs to the user
+    const result = await pool.query(
+      "SELECT * FROM requests WHERE id = $1 AND user_id = $2",
+      [requestId, userId]
+    );
+    if (result.rowCount === 0) {
+      req.flash(
+        "error_msg",
+        "Request not found or you do not have permission to delete it."
+      );
+      return res.status(404).redirect("/citizen/history");
+    }
+
+    // Delete the request
+    await pool.query("DELETE FROM requests WHERE id = $1", [requestId]);
+    req.flash("success_msg", "Request canceled successfully.");
+    res.redirect("/citizen/history");
+  } catch (error) {
+    console.error("Error deleting request:", error);
+    req.flash("error_msg", "Failed to delete request.");
+    res.status(500).redirect("/citizen/history");
+  }
+};
+
+/* -------------- Citizen History page --------------- */
+
+export const getHistory = async (req, res) => {
+  const userId = req.user.id;
+  const { status, service_name, startDate, endDate } = req.query;
+  const notifications = await fetchNotifications(req.user.id);
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
+  try {
+    let query = db("requests as r")
+      .select(
+        "r.id",
+        "s.name as service_name",
+        "s.fee as service_fee",
+        "r.status",
+        "r.comments",
+        "r.created_at"
+      )
+      .join("services as s", "r.service_id", "s.id")
+      .where("r.user_id", userId);
+
+    if (status) query = query.where("r.status", status);
+    if (service_name) query = query.whereILike("s.name", `%${service_name}%`);
+    if (startDate && endDate)
+      query = query.whereBetween("r.created_at", startDate, endDate);
+
+    const requests = await query;
+    res.render("citizen/history", {
+      requests,
+      filters: req.query,
+      notifications,
+      unreadCount,
+    });
+  } catch (error) {
+    console.log("Error fetching history:", error);
+    res.status(500).send("Internal server error.");
+  }
+};

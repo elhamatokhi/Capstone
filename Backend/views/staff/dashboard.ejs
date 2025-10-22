@@ -1,0 +1,67 @@
+<%- include('../partials/header', { title: "Staff Dashboard" }) %> <%-
+include('../partials/navbar-staff') %>
+
+<div class="max-w-6xl mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-4">Staff Dashboard</h2>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="p-4 bg-white shadow rounded-lg">
+      <h3 class="font-semibold">Submitted Requests</h3>
+      <p class="text-2xl text-yellow-600">
+        <%= requests.filter(r => r.status === 'submitted').length %>
+      </p>
+    </div>
+    <div class="p-4 bg-white shadow rounded-lg">
+      <h3 class="font-semibold">Requests Under Review</h3>
+      <p class="text-2xl text-blue-600">
+        <%= requests.filter(r => r.status === 'under_review').length %>
+      </p>
+    </div>
+    <div class="p-4 bg-white shadow rounded-lg">
+      <h3 class="font-semibold">Approved Requests</h3>
+      <p class="text-2xl text-green-600">
+        <%= requests.filter(r => r.status === 'approved').length %>
+      </p>
+    </div>
+    <div class="p-4 bg-white shadow rounded-lg">
+      <h3 class="font-semibold">Rejected Requests</h3>
+      <p class="text-2xl text-green-600">
+        <%= requests.filter(r => r.status === 'rejected').length %>
+      </p>
+    </div>
+  </div>
+
+  <!-- Requests Table -->
+  <div class="bg-white shadow rounded-lg p-4">
+    <h3 class="font-semibold mb-2">Requests Assigned to You</h3>
+    <table class="w-full text-left">
+      <thead>
+        <tr>
+          <th class="px-2 py-1">Request ID</th>
+          <th class="px-2 py-1">Status</th>
+          <th class="px-2 py-1">Create at</th>
+          <th class="px-2 py-1">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% requests.forEach(request => { %>
+        <tr>
+          <td class="px-2 py-1"><%= request.id %></td>
+          <td class="px-2 py-1"><%= request.status %></td>
+          <td class="px-2 py-1"><%= request.created_at %></td>
+          <td class="py-3 px-4">
+            <a
+              href="/requests/<%= request.id %>"
+              class="text-blue-600 hover:underline"
+              >View</a
+            >
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,78 @@
+<%- include('./partials/header', { title: "Contact Us" }) %> <%-
+include(navbarPartial) %>
+<script>
+  const btn = document.getElementById("notif-btn");
+  const dropdown = document.getElementById("notif-dropdown");
+
+  btn.addEventListener("click", () => {
+    dropdown.classList.toggle("hidden");
+  });
+
+  // Optional: close dropdown if clicked outside
+  window.addEventListener("click", (e) => {
+    if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.add("hidden");
+    }
+  });
+</script>
+
+<div class="max-w-2xl mx-auto p-8 bg-white shadow rounded-lg mt-8">
+  <h1 class="text-2xl font-bold mb-4 text-blue-700">Contact Us</h1>
+  <p class="mb-6 text-gray-700">
+    Have questions, feedback, or need support? Fill out the form below or reach
+    us directly at
+    <a href="mailto:support@citizenportal.com" class="text-blue-600 underline"
+      >support@citizenportal.com</a
+    >.
+  </p>
+  <form action="/contact" method="POST" class="space-y-4">
+    <div>
+      <label for="name" class="block font-semibold mb-1">Your Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        required
+        class="w-full border rounded px-3 py-2"
+      />
+    </div>
+    <div>
+      <label for="subject" class="block font-semibold mb-1">Subject</label>
+      <input
+        type="subject"
+        id="subject"
+        name="subject"
+        required
+        class="w-full border rounded px-3 py-2"
+      />
+    </div>
+    <div>
+      <label for="email" class="block font-semibold mb-1">Your Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        class="w-full border rounded px-3 py-2"
+      />
+    </div>
+    <div>
+      <label for="message" class="block font-semibold mb-1">Message</label>
+      <textarea
+        id="message"
+        name="message"
+        rows="5"
+        required
+        class="w-full border rounded px-3 py-2"
+      ></textarea>
+    </div>
+    <button
+      type="submit"
+      class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+    >
+      Send Message
+    </button>
+  </form>
+</div>
+
+<%- include('./partials/footer') %>
