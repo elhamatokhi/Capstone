@@ -34,7 +34,7 @@ The E-Government Citizen Services Portal is a web application that enables citiz
 
 ```bash
 git clone https://github.com/elhamatokhi/Capstone.git
-cd e-government-portal
+cd Capstone/Backend
 ```
 
 Install dependencies:
